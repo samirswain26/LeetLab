@@ -52,6 +52,7 @@ export const register = async (req, res) => {
     res.cookie("jwt", token, cookieOption);
 
     res.status(201).json({
+      success: true,
       message: "User created successfully",
       user: {
         id: newUser.id,
@@ -113,6 +114,7 @@ export const login = async (req, res) => {
     res.cookie("jwt", token, cookieOption);
 
     res.status(200).json({
+      success: true,
       message: "User logged in successfully",
       user: {
         id: user.id,
@@ -130,5 +132,25 @@ export const login = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {};
+export const logout = async (req, res) => {
+  try {
+    const cookieOption = {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+    };
+    res.clearCookie("jwt", cookieOption);
+
+    res.status(200).json({
+      success: true,
+      message: "User logout successfully!",
+    });
+  } catch (error) {
+    console.log(`Error in logout`, error);
+    res.status(500).json({
+      error: "Error in logout.",
+    });
+  }
+};
+
 export const check = async (req, res) => {};

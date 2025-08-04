@@ -69,6 +69,66 @@ export const register = async (req, res) => {
   }
 };
 
-export const login = async (req, res) => {};
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+    console.log(`Login user email is :`, email);
+
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      return res.status(401).json({
+        error: "User not found",
+      });
+    }
+
+    const isMatched = await bcrypt.compare(password, user.password);
+
+    if (!isMatched) {
+      return res.status(401).json({
+        error: "Invalid credentials",
+      });
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    const cookieOption = {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 1000 * 60 * 60 * 24 * 7, //7 days
+    };
+
+    res.cookie("jwt", token, cookieOption);
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        image: user.image,
+      },
+    });
+  } catch (error) {
+    console.log("Error in logging in user: ", error);
+    res.status(500).json({
+      error: "Error logging in user",
+    });
+  }
+};
+
 export const logout = async (req, res) => {};
 export const check = async (req, res) => {};

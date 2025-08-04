@@ -19,13 +19,44 @@ enum UserRole {
   USER
 }
 
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model User {
-  id String @id @default(uuid())
-  name String?
-  email String @unique
-  image String?
-  role UserRole @default(USER)
-  password String
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  image     String?
+  role      UserRole @default(USER)
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  problems Problem[]
+}
+
+model Problem {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  difficulty  Difficulty
+  tags        String[] // ["tasg1", "tag2" , "tag3"]
+  userId      String
+  examples    Json
+  constraints String
+  hints       String
+  editorial   String
+
+  testcases          Json // {input: 1, output: 1} {input: 5, output: 5}
+  codeSnippets       Json
+  referenceSolutions Json
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // Relationship
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

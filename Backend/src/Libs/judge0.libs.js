@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getJudge0LanguageId = (language) => {
   const LanguageMap = {
     PYTHON: 71,
@@ -8,13 +10,14 @@ export const getJudge0LanguageId = (language) => {
   return LanguageMap[language.toUpperCase()];
 };
 
-export const submitBatch = async (submissions) => {
-  const { data } = await axios.post(
-    `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`,
-    { submissions }
-  );
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  console.log("Submission Result : ", data);
+const SubmitURL = `${process.env.JUDGE0_API_URL}/submissions/batch?base64_encoded=false`;
+
+export const submitBatch = async (submissions) => {
+  const { data } = await axios.post(SubmitURL, { submissions });
+
+  console.log("Submission Result Tokens are : ", data);
 
   return data; // {token} {tokens} it contains the token given by the judge0 for each test case and for each language.
 };

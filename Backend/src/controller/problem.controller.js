@@ -8,9 +8,11 @@ import {
 export const createProblem = async (req, res) => {
   const {
     title,
-    decsription,
+    description,
     difficulty,
     tags,
+    hints,
+    editorial,
     constraints,
     examples,
     testcases,
@@ -23,7 +25,7 @@ export const createProblem = async (req, res) => {
       error: "You are not allowed to create a problem.",
     });
   }
-
+  console.log("Reached create problem", title);
   try {
     for (const [language, solutioncode] of Object.entries(referenceSolutions)) {
       const languageId = await getJudge0LanguageId(language);
@@ -32,6 +34,7 @@ export const createProblem = async (req, res) => {
           error: `Language ${language} is not supported`,
         });
       }
+      console.log(languageId);
 
       const submissions = testcases.map(({ input, output }) => ({
         source_code: solutioncode,
@@ -40,7 +43,10 @@ export const createProblem = async (req, res) => {
         expected_output: output,
       }));
 
+      console.log(`Submissions are : ${submissions}`);
+
       const submissionResults = await submitBatch(submissions);
+      console.log("SubmissionResult is: ", submissionResults);
 
       const tokens = submissionResults.map((res) => res.token);
 
@@ -57,30 +63,38 @@ export const createProblem = async (req, res) => {
         }
       }
 
-      // Save the proble to the database
+      // Save the problem to the database
 
       const newProblem = await db.problem.create({
         data: {
           title,
-          decsription,
+          description,
           difficulty,
           tags,
+          hints,
+          editorial,
           constraints,
           examples,
           testcases,
           codeSnippets,
           referenceSolutions,
-          user: user.id,
+          userId: req.user.id,
         },
       });
 
       return res.status(201).json({
-        success: true,
+        sucess: true,
         message: "Problem Created Successfully",
         problem: newProblem,
       });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error Creating the problem  ", error);
+    return res.status(500).json({
+      error: "Internal server error",
+      details: error.message,
+    });
+  }
 };
 
 export const getAllProblems = async (req, res) => {};

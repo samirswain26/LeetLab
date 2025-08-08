@@ -35,7 +35,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  problems Problem[]
+  problems   Problem[]
+  submission Submission[]
 }
 
 model Problem {
@@ -58,5 +59,27 @@ model Problem {
   updatedAt DateTime @default(now())
 
   // Relationship
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  submission Submission[]
+}
+
+model Submission {
+  id            String  @id @default(uuid())
+  userId        String
+  problemId     String
+  sourceCode    Json
+  language      String
+  stdin         String?
+  stdout        String?
+  stderr        String?
+  compileOutput String
+  status        String // if all test casses passes then accept otherwise wrong answer
+  memory        String?
+  time          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }

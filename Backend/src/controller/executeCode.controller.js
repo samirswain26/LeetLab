@@ -3,8 +3,7 @@ import { pollBatchResults, submitBatch } from "../Libs/judge0.libs.js";
 export const executeCode = async (req, res) => {
   try {
     const { source_code, language_id, stdin, expected_outputs, problemId } =
-      req.body;
-
+      req.body;S
     const userId = req.user.id;
 
     // Validate test cases are in the proper array format or not

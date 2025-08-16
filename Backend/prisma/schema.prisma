@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -12,6 +6,43 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String?
+  email     String    @unique
+  image     String?
+  role      UserRole  @default(USER)
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+
+  problems  Problem[]
+  submission Submission[]
+  problemSolved problemSolved[]
+}
+
+model Problem {
+  id                 String     @id @default(uuid())
+  title              String
+  description        String
+  difficulty         Difficulty
+  tags               String[]
+  userId             String
+  examples           Json
+  constraints        String
+  hints              String?
+  editorial          String?
+  testcases          Json
+  codeSnippets       Json
+  referenceSolutions Json
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @default(now())
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  submission Submission[]
+  solvedBy problemSolved[]
 }
 
 enum UserRole {
@@ -23,44 +54,6 @@ enum Difficulty {
   EASY
   MEDIUM
   HARD
-}
-
-model User {
-  id        String   @id @default(uuid())
-  name      String?
-  email     String   @unique
-  image     String?
-  role      UserRole @default(USER)
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  problems   Problem[]
-  submission Submission[]
-}
-
-model Problem {
-  id          String     @id @default(uuid())
-  title       String
-  description String
-  difficulty  Difficulty
-  tags        String[] // ["tasg1", "tag2" , "tag3"]
-  userId      String
-  examples    Json
-  constraints String
-  hints       String?
-  editorial   String?
-
-  testcases          Json // {input: 1, output: 1} {input: 5, output: 5}
-  codeSnippets       Json
-  referenceSolutions Json
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  // Relationship
-  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  submission Submission[]
 }
 
 model Submission {
@@ -82,4 +75,41 @@ model Submission {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  testcase TestCaseResult[]
+}
+
+model TestCaseResult{
+  id String  @id @default(uuid())
+  submissionId String
+  testCase Int
+  passed Boolean
+  stdout String?
+  expected String
+  stderror String?
+  compileOutput String?
+  status String
+  memory String?
+  time String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}
+
+model problemSolved{
+  id String  @id @default(uuid())
+  userId String
+  problemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
 }

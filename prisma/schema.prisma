@@ -65,7 +65,7 @@ model Submission {
   stdin         String?
   stdout        String?
   stderr        String?
-  compileOutput String
+  compileOutput String?
   status        String // if all test casses passes then accept otherwise wrong answer
   memory        String?
   time          String?

@@ -105,19 +105,64 @@ export const addProblemstoPlaylist = async (req, res) => {
   try {
     console.log("Play list id is", playlistId);
     console.log("Problem id is :", problemIds);
-    console.log("type of problemIds is:-");
-    console.log(typeof problemIds);
+    console.log("type of problemIds is:-", typeof problemIds);
+    console.log("Type of Playlist is :", typeof playlistId);
 
-    // if the problem id as in the array then it changes to the array.
-    // if (typeof problemIds === "string") {
-    //   problemIds = [problemIds];
-    // }
+    const checkpalylist = await db.playlist.findUnique({
+      where: {
+        id: playlistId,
+      },
+    });
+    if (!checkpalylist) {
+      res.status(404).json({
+        error: "Playlist not found.",
+      });
+    }
+
+    let problemsArray = [];
+
+    if (Array.isArray(problemIds)) {
+      problemsArray = problemIds;
+    } else if (typeof problemIds === "string") {
+      problemsArray = [problemIds]; // wrap single id in array
+    } else {
+      return res.status(400).json({
+        error: "Invalid problemIds format",
+      });
+    }
+
+    for (const problemId of problemsArray) {
+      const problem = await db.problem.findUnique({
+        where: { id: problemId },
+      });
+
+      if (!problem) {
+        return res.status(404).json({
+          error: `Problem id not found`,
+        });
+      }
+    }
 
     if (!Array.isArray(problemIds) || problemIds.length === 0) {
       res.status(400).json({
         error: "Invalid or missing problem",
       });
     }
+
+    const existingProblems = await db.ProblemInPlaylist.findMany({
+      where: {
+        playlistId,
+        problemId: { in: problemsArray },
+      },
+    });
+
+    if (existingProblems.length > 0) {
+      return res.status(400).json({
+        error: "Some problems already exist in the playlist",
+        existingProblemIds: existingProblems.map((p) => p.problemId),
+      });
+    }
+
     //create record in the playlists
 
     const problemsInPlaylist = await db.ProblemInPlaylist.createMany({
@@ -140,6 +185,39 @@ export const addProblemstoPlaylist = async (req, res) => {
   }
 };
 
-export const deletePlaylist = async (req, res) => {};
+export const deletePlaylist = async (req, res) => {
+  try {
+    const { playlistId } = req.params;
+
+    const findPlaylist = await db.Playlist.findUnique({
+      where: {
+        id: playlistId,
+      },
+    });
+
+    if (!findPlaylist) {
+      res.status(404).json({
+        error: "Play list not found",
+      });
+    }
+
+    const deletePlaylist = await db.playlist.delete({
+      where: {
+        id: playlistId,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Play list deleted successfully",
+      deletePlaylist,
+    });
+  } catch (error) {
+    console.log("Error in deleting playlist :", error);
+    res.status(500).json({
+      error: "Error in deleting playlist",
+    });
+  }
+};
 
 export const removeProblemFromPlaylist = async (req, res) => {};

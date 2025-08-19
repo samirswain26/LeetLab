@@ -4,10 +4,6 @@ export const createPlaylist = async (req, res) => {
   try {
     const { name, description } = req.body;
     const userId = req.user.id;
-
-    // if (!name || !description) {
-    //   return res.status(403).json({ error: "All fields are required" });
-    // }
     console.log(name);
 
     const playlist = await db.playlist.create({
@@ -31,7 +27,35 @@ export const createPlaylist = async (req, res) => {
   }
 };
 
-export const getAllListDetails = async (req, res) => {};
+export const getAllListDetails = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const playlist = await db.playlist.findMany({
+      where: {
+        userId: userId,
+      },
+      include:{
+        problems:{
+            include:{
+                problem: true
+            }
+        }
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Get all playlists",
+      playlist,
+    });
+  } catch (error) {
+    console.log("Error in get all playlist :", error);
+    res.status(500).json({
+      error: "Error in getting playlists",
+    });
+  }
+};
 
 export const getPlayListDetails = async (req, res) => {};
 

@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { z } from "zod";
+
 import AuthImagePatters from "../components/AuthImagePatters";
+import { useAuthStore } from "../store/useAuthStore";
 
 const LoginSchema = z.object({
   email: z.email({ message: "Enter a valid email" }),
@@ -13,7 +15,7 @@ const LoginSchema = z.object({
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  // const { Login, isSigninUp } = useAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -24,7 +26,7 @@ const LoginPage = () => {
 
   const onsubmit = async (data) => {
     try {
-      // await Login(data);
+      await login(data);
       console.log("Login data", data);
     } catch (error) {
       console.error("Login failed:", error);
@@ -111,17 +113,16 @@ const LoginPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              // disabled={isSigninUp}
+              disabled={isLoggingIn}
             >
-              {/* {isSigninUp ? (
+              {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
                 </>
               ) : (
                 "Sign in"
-              )} */}
-              Login
+              )}
             </button>
           </form>
           {/* Footer */}

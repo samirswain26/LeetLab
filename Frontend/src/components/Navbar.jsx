@@ -1,12 +1,11 @@
-import React from "react";
 import { User, Code, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { Link } from "react-router-dom";
 import { LogoutButton } from "./LogoutButton.jsx";
 
 export const Navbar = () => {
-  const { AuthStore } = useAuthStore();
-  console.log("AUTH_USER", AuthStore);
+  const { authUser } = useAuthStore();
+  console.log("AUTH_USER", authUser);
 
   return (
     <nav className="sticky top-0 z-50 w-full py-5">
@@ -30,7 +29,7 @@ export const Navbar = () => {
               <div className="w-10 rounded-full ">
                 <img
                   src={
-                    AuthStore?.image ||
+                    authUser?.image ||
                     "https://avatar.iran.liara.run/public/boy"
                   }
                   alt="User Avatar"
@@ -38,45 +37,45 @@ export const Navbar = () => {
                 />
               </div>
             </label>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
-          >
-            {/* Admin Option */}
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
+            >
+              {/* Admin Option */}
 
-            {/* Common Options */}
-            <li>
-              <p className="text-base font-semibold">{AuthStore?.name}</p>
-              <hr className="border-gray-200/10" />
-            </li>
-            <li>
-              <Link
-                to="/profile"
-                className="hover:bg-primary hover:text-white text-base font-semibold"
-              >
-                <User className="w-4 h-4 mr-2" />
-                My Profile
-              </Link>
-            </li>
-            {AuthStore?.role === "ADMIN" && (
+              {/* Common Options */}
+              <li>
+                <p className="text-base font-semibold">{authUser?.name}</p>
+                <hr className="border-gray-200/10" />
+              </li>
               <li>
                 <Link
-                  to="/add-problem"
+                  to="/profile"
                   className="hover:bg-primary hover:text-white text-base font-semibold"
                 >
-                  <Code className="w-4 h-4 mr-1" />
-                  Add Problem
+                  <User className="w-4 h-4 mr-2" />
+                  My Profile
                 </Link>
               </li>
-            )}
-            <li>
-              <LogoutButton className="hover:bg-primary hover:text-white">
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </LogoutButton>
-            </li>
-          </ul>
+              {authUser?.role === "ADMIN" && (
+                <li>
+                  <Link
+                    to="/add-problem"
+                    className="hover:bg-primary hover:text-white text-base font-semibold"
+                  >
+                    <Code className="w-4 h-4 mr-1" />
+                    Add Problem
+                  </Link>
+                </li>
+              )}
+              <li>
+                <LogoutButton className="hover:bg-primary hover:text-white">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </LogoutButton>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>

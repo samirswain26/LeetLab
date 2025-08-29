@@ -66,6 +66,23 @@ const ProblemTable = ({ problems }) => {
           ))}
         </select>
       </div>
+
+      <div className="overflow-x-auto rounded-xl shadow-md">
+        <table className="table table-zebra table-lg bg-base-200 text-base-content">
+          <thead className="bg-base-300">
+            <tr>
+              <th>Solved</th>
+              <th>Title</th>
+              <th>Tags</th>
+              <th>Difficulty</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

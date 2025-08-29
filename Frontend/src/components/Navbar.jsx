@@ -9,7 +9,7 @@ export const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full py-5">
-      <div className="flex w-full justify-between mz-auto max-w-4xl bg-black/15 shodow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-4 rounded-2xl">
+      <div className="flex w-full justify-between mx-auto max-w-4xl bg-black/15 shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-4 rounded-2xl">
         {/* Logo Section */}
         <Link to="/" className="flex items-center gap-3 cursor-pointer">
           <img

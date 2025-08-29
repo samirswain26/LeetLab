@@ -1,8 +1,8 @@
-import { Create } from "zustand";
+import { create } from "zustand";
 import { axiosInstance } from "../libs/axios";
 import { toast } from "react-hot-toast";
 
-export const useProblemStore = Create((set) => ({
+export const useProblemStore = create((set) => ({
   problems: [],
   problem: null,
   solvedProblems: [],
@@ -14,11 +14,13 @@ export const useProblemStore = Create((set) => ({
       set({ isProblemsLoading: true });
 
       const res = await axiosInstance.get("/problems/get-all-problems");
-
+      console.log("Get all problem data is : ", res);
       set({ problems: res.data.problems });
+
+      toast.success(res.data.message);
     } catch (error) {
       console.log("Error getting all problems", error);
-      toast.error(res.data.message || "Error in getting problems");
+      toast.error("Error in getting problems");
     } finally {
       set({ isProblemsLoading: false });
     }

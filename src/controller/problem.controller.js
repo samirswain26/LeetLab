@@ -107,7 +107,7 @@ export const getAllProblems = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Message Fetched Successfully",
+      message: "Problems Fetched Successfully",
       problems,
     });
   } catch (error) {

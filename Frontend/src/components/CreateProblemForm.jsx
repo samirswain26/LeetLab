@@ -16,7 +16,7 @@ import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const problemSchema = z.object({
   title: z.string().min(3, "Title must be atleast 3 characters"),
@@ -513,7 +513,7 @@ public class Main {
 const CreateProblemForm = () => {
   const [sampleType, setSampleType] = useState("DP");
 
-  const navigation = useNavigate();
+  const Navigate = useNavigate();
   const {
     register,
     control,
@@ -565,14 +565,26 @@ const CreateProblemForm = () => {
 
   const [isloading, setIsLoading] = useState(false);
   const onSubmit = async (data) => {
-    console.log("Problem onsubmit data is : ", data);
+    try {
+      setIsLoading(true)
+      const res = await axiosInstance.post("/problems/create-problem", data)
+      console.log("Respose data to the backend is : ", res)
+      console.log(" Response.data is : ", res.data)
+      toast.success(res.data.message || "Problem created successfully" )
+      Navigate("/")
+    } catch (error) {
+      console.log("Error in creating the problem is : ", error)
+      toast.error( res.data.message || "Error in creating the problem")
+    }finally{
+      setIsLoading(false)
+    }
   };
 
   const loadSampleData = () => {
     const sampleData =
       sampleType === "DP" ? sampledData : sampleStringProblem;
     replaceTags(sampleData.tags.map((tag) => tag));
-    replaceTestCases(sampleData.testcases((testcases) => testcases));
+    replaceTestCases(sampleData.testcases.map((testcases) => testcases));
 
     // Reset thr form with sample data
     reset(sampleData);
@@ -597,7 +609,7 @@ const CreateProblemForm = () => {
                   }`}
                   onClick={() => setSampleType("array")}
                 >
-                  DP
+                  DP Problem
                 </button>
                 <button
                   type="button"
@@ -619,7 +631,7 @@ const CreateProblemForm = () => {
               </div>
             </div>
           </div>
-          // Above section need re-checking...
+          
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             {/* basic Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -754,7 +766,7 @@ const CreateProblemForm = () => {
                     <div className="card-body p-4 md:p-6">
                       <div className="flex justify-between items-center mb-4">
                         <h4 className="text-base md:text-lg font-semibold">
-                          Test case #(index + 1)
+                          Test case #{index + 1}
                         </h4>
                         <button
                           type="button"
@@ -879,7 +891,7 @@ const CreateProblemForm = () => {
                         </h4>
                         <div className="border rounded-md overflow-hidden">
                           <Controller
-                            name={`referenecSolutions.${language}`}
+                            name={`referenceSolutions.${language}`}
                             control={control}
                             render={({ field }) => (
                               <Editor
@@ -1004,7 +1016,7 @@ const CreateProblemForm = () => {
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font font-medium">
-                      Hints (Optional
+                      Hints (Optional)
                     </span>
                   </label>
                   <textarea

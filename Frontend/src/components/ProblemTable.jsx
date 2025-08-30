@@ -1,4 +1,4 @@
-import React, { use, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import { Bookmark, PencilIcon, Trash, TrashIcon, Plus } from "lucide-react";
@@ -11,8 +11,7 @@ const ProblemTable = ({ problems }) => {
   const [selectedTag, setSelectedTag] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const difficulties = ["EASY", "MEDIUM", "HARD"];
-
+  // Extract all unique tags from problems
   const allTags = useMemo(() => {
     if (!Array.isArray(problems)) return [];
 
@@ -21,6 +20,8 @@ const ProblemTable = ({ problems }) => {
     problems.forEach((p) => p.tags?.forEach((h) => tagset.add(h)));
     return Array.from(tagset);
   }, [problems]);
+
+  const difficulties = ["EASY", "MEDIUM", "HARD"];
 
   //Filetr the data according to the data comming from the backend to show in the ui when user selects the filter the questions
   const filteredProblems = useMemo(() => {
@@ -34,7 +35,7 @@ const ProblemTable = ({ problems }) => {
       .filter((problem) =>
         selectedTag === "ALL" ? true : problem.tags?.includes(selectedTag)
       );
-  }, [problems, search, difficulties, selectedTag]);
+  }, [problems, search, difficulty, selectedTag]);
 
   // Pagination for the table data
   const itemsPerPage = 5;
@@ -46,10 +47,9 @@ const ProblemTable = ({ problems }) => {
     );
   }, [filteredProblems, currentPage]);
 
+  const handleDelete = (id) => {};
 
-  const handleDelete = (id) => {}
-
-  const handleAddToPlaylist = (id) => {}
+  const handleAddToPlaylist = (id) => {};
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
@@ -77,7 +77,7 @@ const ProblemTable = ({ problems }) => {
         >
           <option value="ALL">All Difficulties</option>
           {difficulties.map((diff) => (
-            <option key={diff} value="diff">
+            <option key={diff} value={diff}>
               {diff.charAt(0).toUpperCase() + diff.slice(1).toLowerCase()}
             </option>
           ))}
@@ -86,9 +86,8 @@ const ProblemTable = ({ problems }) => {
           className="select select-bordered bg-base-200"
           value={selectedTag}
           onChange={(e) => setSelectedTag(e.target.value)}
-          placeholder="Conditionals"
         >
-          <option value="All">All Tags</option>
+          <option value="ALL">All Tags</option>
           {allTags.map((tag) => (
             <option key={tag} value={tag}>
               {tag}
@@ -196,6 +195,40 @@ const ProblemTable = ({ problems }) => {
           </tbody>
         </table>
       </div>
+      {/* Pagination */}
+      <div className="flex justify-center mt-6 gap-2">
+        <button
+          className="btn btn-sm"
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+        >
+          Prev
+        </button>
+        <span className="btn btn-ghost btn-sm">
+          {currentPage} / {totalPages}
+        </span>
+        <button
+          className="btn btn-sm"
+          disabled={currentPage === totalPages || currentPage > totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Modals */}
+      {/* <CreatePlaylistModal
+        isOpen={isCreateModalOpen}
+        // onClose={() => setIsCreateModalOpen(false)}
+        // onSubmit={handleCreatePlaylist}
+        onSubmit={()=>{}}
+      />
+
+      <AddToPlaylistModal
+        isOpen={isAddToPlaylistModalOpen}
+        // onClose={() => setIsAddToPlaylistModalOpen(false)}
+        problemId={selectedProblemId}
+      /> */}
     </div>
   );
 };

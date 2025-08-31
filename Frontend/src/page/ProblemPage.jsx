@@ -48,7 +48,9 @@ const ProblemPage = () => {
   }, [problem, selectedLanguage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200"></div>
+    <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200">
+      {JSON.stringify(problem)}
+    </div>
   );
 };
 

@@ -22,6 +22,7 @@ import {
 import { useProblemStore } from "../store/useProblemStore.js";
 import { useExecutionStore } from "../store/useExecutionStore.js";
 import { getLanguageId } from "../libs/lang.js";
+import SubmissionResults from "../components/Submission.jsx";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -175,18 +176,6 @@ const ProblemPage = () => {
     }
   };
 
-  // const handleRunCode = (e) => {
-  //   e.preventDefault()
-  //   try {
-  //     const language_id = getLanguageId(selectedLanguage)
-  //     const stdin = problem.testcases.map((tc) => tc.input)
-  //     const expected_outputs = problem.testcases.map((tc) => tc.output)
-  //     executeCode(code, language_id, stdin, expected_outputs, id)
-  //   } catch (error) {
-  //     console.log("Error Executing code", error)
-  //   }
-  // }
-
   const handleRunCode = (e) => {
     e.preventDefault();
     try {
@@ -198,7 +187,7 @@ const ProblemPage = () => {
       console.log("Error executing code", error);
     }
   };
-
+console.log("Submission is : ", submission)
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       {isProblemLoading ? (
@@ -356,12 +345,13 @@ const ProblemPage = () => {
               </div>
             </div>
 
-            <div className="card bg--base-100 shadow-xl mt-6">
-              <div className="card-body ">
+            <div className="card bg-base-100 shadow-xl mt-6">
+              <div className="card-body">
                 {submission ? (
-                  <h1>Submission is here </h1>
+                  <SubmissionResults submission={submission} />
                 ) : (
                   <>
+                   {console.log("submission is empty:", submission)}
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-xl font-bold">Test Cases</h3>
                     </div>

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export const useExecutionStore = create((set) => ({
     isExecuting : false,
-    submission : null,
+    submission:null,
 
 
     executeCode: async(source_code, language_id, stdin, expected_outputs, problemId)=>{
@@ -18,13 +18,16 @@ export const useExecutionStore = create((set) => ({
                 source_code, language_id, stdin, expected_outputs, problemId
             })
 
-            set({submission: res.data.submission})
+            console.log("Setting submission:", res.data.submissionWithTestCase );
+            console.log("Backend response:", res.data);
+            set({submission: res.data.submissionWithTestCase })
             toast.success(res.data.message)
+
         } catch (error) {
             console.log("Error Executing Code", error)
             toast.error("Error Executing Code")
         }finally{
             set({isExecuting:false})
         }
-    }
+    },
 }))

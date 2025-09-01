@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 
 import { useProblemStore } from "../store/useProblemStore.js";
+import { useExecutionStore } from "../store/useExecutionStore.js";
+import { getLanguageId } from "../libs/lang.js";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -30,7 +32,9 @@ const ProblemPage = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [selectedLanguage, setSelectedlanguage] = useState("JAVASCRIPT"); //By putting the value in uppercase it directly shows the code in that language
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [testCases, setTestCases] = useState([]);
+  const [testcases, setTestCases] = useState([]);
+
+  const { executeCode, submission, isExecuting } = useExecutionStore();
 
   const submissionCount = 10;
   useEffect(() => {
@@ -49,8 +53,6 @@ const ProblemPage = () => {
       );
     }
   }, [problem, selectedLanguage]);
-
-  const submission = false;
 
   const handleLanguageChange = (e) => {
     const language = e.target.value;
@@ -151,10 +153,7 @@ const ProblemPage = () => {
         );
       case "hints":
         return (
-          <div className="p-4 text-center text-base-content/70">
-            {" "}
-            No Submisson{" "}
-          </div>
+          <div className="p-4 text-center text-base-content/70"> No Hints </div>
         );
       // return (
       //   <div className="p-4">
@@ -173,6 +172,30 @@ const ProblemPage = () => {
       // );
       default:
         return null;
+    }
+  };
+
+  // const handleRunCode = (e) => {
+  //   e.preventDefault()
+  //   try {
+  //     const language_id = getLanguageId(selectedLanguage)
+  //     const stdin = problem.testcases.map((tc) => tc.input)
+  //     const expected_outputs = problem.testcases.map((tc) => tc.output)
+  //     executeCode(code, language_id, stdin, expected_outputs, id)
+  //   } catch (error) {
+  //     console.log("Error Executing code", error)
+  //   }
+  // }
+
+  const handleRunCode = (e) => {
+    e.preventDefault();
+    try {
+      const language_id = getLanguageId(selectedLanguage);
+      const stdin = problem.testcases.map((tc) => tc.input);
+      const expected_outputs = problem.testcases.map((tc) => tc.output);
+      executeCode(code, language_id, stdin, expected_outputs, id);
+    } catch (error) {
+      console.log("Error executing code", error);
     }
   };
 
@@ -315,11 +338,13 @@ const ProblemPage = () => {
                   <div className="p-4 border-base-300 bg-base-200 ">
                     <div className="flex justify-between items-center">
                       <button
-                        className={`btn btn-primary gap-2`}
-                        onClick={() => {}}
-                        // disabled={isExecuting}
+                        className={`btn btn-primary gap-2 ${
+                          isExecuting ? "loading" : ""
+                        }`}
+                        onClick={handleRunCode}
+                        disabled={isExecuting}
                       >
-                        <Play className="w-4 h-4" />
+                        {!isExecuting && <Play className="w-4 h-4" />}
                         Run Code
                       </button>
                       <button className="btn btn-success gap-2">
@@ -349,7 +374,7 @@ const ProblemPage = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {testCases.map((testCase, index) => (
+                          {testcases.map((testCase, index) => (
                             <tr key={index}>
                               <td className="font-mono">{testCase.input}</td>
                               <td className="font-mono">{testCase.output}</td>

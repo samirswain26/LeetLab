@@ -38,7 +38,7 @@ export const useSubmissionStore = create((set)=>({
     getSubmissionCountForProblem:async(problemId) => {
         try {
             const res = await axiosInstance.get(`/submission/get-submissions-count/${problemId}`)
-            set({submissionCount: res.data})
+            set({submissionCount: res.data.count})
         } catch (error) {
             console.log("Error in submission count", error)
             toast.error("Error in submission count")

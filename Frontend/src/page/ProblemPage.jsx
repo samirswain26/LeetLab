@@ -23,11 +23,22 @@ import { useProblemStore } from "../store/useProblemStore.js";
 import { useExecutionStore } from "../store/useExecutionStore.js";
 import { getLanguageId } from "../libs/lang.js";
 import SubmissionResults from "../components/Submission.jsx";
+import SubmissionsList from "../components/SubmissionsList.jsx";
+import { useSubmissionStore } from "../store/useSubmissionStore.js";
 
 const ProblemPage = () => {
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
+
+  const {
+    submission: submissions,
+    isLoading,
+    getAllSubmissions,
+    getSubmissionForPeoblem,
+    getSubmissionCountForProblem,
+    submissionCount,
+  } = useSubmissionStore();
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -37,9 +48,10 @@ const ProblemPage = () => {
 
   const { executeCode, submission, isExecuting } = useExecutionStore();
 
-  const submissionCount = 10;
+  // const submissionCount = 10;
   useEffect(() => {
     getProblemById(id);
+    getSubmissionCountForProblem(id);
   }, [id]);
 
   useEffect(() => {
@@ -54,6 +66,15 @@ const ProblemPage = () => {
       );
     }
   }, [problem, selectedLanguage]);
+
+  useEffect(()=>{
+    if(activeTab === "submission" && id){
+      getSubmissionForPeoblem(id)
+    }
+  },[activeTab,id])
+
+  console.log("Submissions :::", submissions)
+
 
   const handleLanguageChange = (e) => {
     const language = e.target.value;
@@ -135,17 +156,11 @@ const ProblemPage = () => {
         );
       case "submissions":
         return (
-          <div className="p-4 text-center text-base-content/70">
-            {" "}
-            No Submisson{" "}
-          </div>
+          <SubmissionsList
+            // submissions={submissions}
+            // isLoading={isSubmissionsLoading}
+          />
         );
-      // return (
-      //   <SubmissionsList
-      //     submissions={submissions}
-      //     isLoading={isSubmissionsLoading}
-      //   />
-      // );
       case "discussion":
         return (
           <div className="p-4 text-center text-base-content/70">
@@ -187,7 +202,7 @@ const ProblemPage = () => {
       console.log("Error executing code", error);
     }
   };
-console.log("Submission is : ", submission)
+  console.log("Submission is : ", submission);
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       {isProblemLoading ? (
@@ -216,7 +231,7 @@ console.log("Submission is : ", submission)
                   </span>
                   <span className="text-base-content/30">•</span>
                   <Users className="w-4 h-4" />
-                  <span>{submissionCount} Submissions</span>
+                  <span> {submissionCount} Submissions</span>
                   <span className="text-base-content/30">•</span>
                   {/* <ThumbsUp className="w-4 h-4" /> */}
                   <span>95% Success Rate</span>
@@ -351,7 +366,7 @@ console.log("Submission is : ", submission)
                   <SubmissionResults submission={submission} />
                 ) : (
                   <>
-                   {console.log("submission is empty:", submission)}
+                    {console.log("submission is empty:", submission)}
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-xl font-bold">Test Cases</h3>
                     </div>

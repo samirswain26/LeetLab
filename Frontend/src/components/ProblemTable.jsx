@@ -23,7 +23,7 @@ const ProblemTable = ({ problems }) => {
 
   const difficulties = ["EASY", "MEDIUM", "HARD"];
 
-  //Filetr the data according to the data comming from the backend to show in the ui when user selects the filter the questions
+  //Filter the data according to the data comming from the backend to show in the ui when user selects the filter the questions
   const filteredProblems = useMemo(() => {
     return (problems || [])
       .filter((problem) =>

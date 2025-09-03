@@ -28,7 +28,7 @@ export const useSubmissionStore = create((set)=>({
         try {
             const res = await axiosInstance.get(`/submission/get-submissions/${problemId}`)
             console.log("Submission for problem is :", res.data)
-            set({submission: res.data.submission}) // May the issue came here as res.data.submissions to be there
+            set({submission: res.data.submissions}) // May the issue came here as res.data.submissions to be there
         } catch (error) {
             console.log("Error getting submission for problem : ", error)
             toast.error("Error getting submission for problem")

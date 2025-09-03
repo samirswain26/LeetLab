@@ -68,7 +68,7 @@ const ProblemPage = () => {
   }, [problem, selectedLanguage]);
 
   useEffect(()=>{
-    if(activeTab === "submission" && id){
+    if(activeTab === "submissions" && id){
       getSubmissionForPeoblem(id)
     }
   },[activeTab,id])
@@ -157,8 +157,9 @@ const ProblemPage = () => {
       case "submissions":
         return (
           <SubmissionsList
-            // submissions={submissions}
+            submissions={submissions}
             // isLoading={isSubmissionsLoading}
+            isLoading={isLoading}
           />
         );
       case "discussion":
@@ -202,7 +203,7 @@ const ProblemPage = () => {
       console.log("Error executing code", error);
     }
   };
-  console.log("Submission is : ", submission);
+  console.log("Submission is : ", submissions);
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       {isProblemLoading ? (
@@ -366,7 +367,7 @@ const ProblemPage = () => {
                   <SubmissionResults submission={submission} />
                 ) : (
                   <>
-                    {console.log("submission is empty:", submission)}
+                    {console.log("submission is empty:", submissions)}
                     <div className="flex items-center justify-between mb-6">
                       <h3 className="text-xl font-bold">Test Cases</h3>
                     </div>

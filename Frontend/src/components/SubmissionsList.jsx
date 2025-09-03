@@ -12,7 +12,7 @@ import {
 const SubmissionsList = ({ submissions, isLoading }) => {
   const safeParse = (data) => {
     try {
-      return JOSN.parse(data);
+      return JSON.parse(data);
     } catch (error) {
       console.log("Error in Parsing data ", error);
       return [];
@@ -21,7 +21,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
 
   const calculateAverageMemory = (memoryData) => {
     const memoryArray = safeParse(memoryData).map((n) =>
-      parseFloat(e.split(" ")[0])
+      parseFloat(n.split(" ")[0])
     );
     if (memoryArray.length === 0) return 0;
     return (
@@ -32,7 +32,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
 
   const claculateAverageTime = (timeData) => {
     const timeArray = safeParse(timeData).map((t) =>
-      parseFloat(e.split(" ")[0])
+      parseFloat(t.split(" ")[0])
     );
     if (timeArray.length === 0) return 0;
     return (
@@ -73,7 +73,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
               <div className="flex items-center justify-center">
                 {/* Left- status and language */}
                 <div className="flex items-center gap-4">
-                  {submission.status === "Acpeted" ? (
+                  {submission.status === "Accepted" ? (
                     <div className="flex items-center gap-2 text-success">
                       <CheckCircle2 className="w-6 h-6" />
                       <span className="font-semibold">Accepted</span>

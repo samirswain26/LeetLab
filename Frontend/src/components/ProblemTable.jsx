@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import { Bookmark, PencilIcon, Trash, TrashIcon, Plus } from "lucide-react";
 
+
 const ProblemTable = ({ problems }) => {
   const { authUser } = useAuthStore();
 
@@ -47,9 +48,11 @@ const ProblemTable = ({ problems }) => {
     );
   }, [filteredProblems, currentPage]);
 
-  const handleDelete = (id) => {};
+  const handleDelete = (id) => { return console.log(id)};
 
   const handleAddToPlaylist = (id) => {};
+
+  const handleEdit = async(id) => {console.log(id)}
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
@@ -166,7 +169,10 @@ const ProblemTable = ({ problems }) => {
                             >
                               <TrashIcon className="w-4 h-4 text-white" />
                             </button>
-                            <button disabled className="btn btn-sm btn-warning">
+                            <button 
+                              // disabled 
+                              onClick={()=> handleEdit(problem.id)}
+                              className="btn btn-sm btn-warning">
                               <PencilIcon className="w-4 h-4 text-white" />
                             </button>
                           </div>

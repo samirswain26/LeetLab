@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 
 import { useAction } from "../store/useAction.js";
+import { UsePlayListStore } from "../store/usePlayListStore.js";
+import AddToPlayList from "./AddToPlayList.jsx";
+import CreatePlayListModal from "./createPlaylistModal.jsx";
 
 const ProblemTable = ({ problems }) => {
   const { authUser } = useAuthStore();
@@ -19,8 +22,13 @@ const ProblemTable = ({ problems }) => {
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedTag, setSelectedTag] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] =
+    useState(false);
 
   const { isDeletingProblem, delteProblem } = useAction();
+
+  const { createPlaylist } = UsePlayListStore();
 
   // Extract all unique tags from problems
   const allTags = useMemo(() => {
@@ -68,12 +76,19 @@ const ProblemTable = ({ problems }) => {
     console.log(id);
   };
 
+  const handleCreatePlayList = async (data) => {
+    await createPlaylist(data);
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
       {/* Header with create playlist button */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold ">Problems</h2>
-        <button className="btn btn-primary gap-2" onClick={() => {}}>
+        <button
+          className="btn btn-primary gap-2"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
           <Plus className="w-4 h-4" />
           Create Playlist
         </button>
@@ -241,19 +256,11 @@ const ProblemTable = ({ problems }) => {
         </button>
       </div>
 
-      {/* Modals */}
-      {/* <CreatePlaylistModal
+      <CreatePlayListModal
         isOpen={isCreateModalOpen}
-        // onClose={() => setIsCreateModalOpen(false)}
-        // onSubmit={handleCreatePlaylist}
-        onSubmit={()=>{}}
+        onclose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreatePlayList}
       />
-
-      <AddToPlaylistModal
-        isOpen={isAddToPlaylistModalOpen}
-        // onClose={() => setIsAddToPlaylistModalOpen(false)}
-        problemId={selectedProblemId}
-      /> */}
     </div>
   );
 };

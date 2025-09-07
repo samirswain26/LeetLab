@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { X } from "lucide-react";
 
-const CreatePlayListModal = ({isOpen, onclose, onsubmit}) => {
+const CreatePlayListModal = ({ isOpen, onclose, onSubmit }) => {
   const {
     register,
     handleSubmit,
@@ -11,7 +11,7 @@ const CreatePlayListModal = ({isOpen, onclose, onsubmit}) => {
   } = useForm();
 
   const handleFormSubmit = async (data) => {
-    await onsubmit(data);
+    await onSubmit(data);
     reset();
     onclose();
   };
@@ -22,13 +22,14 @@ const CreatePlayListModal = ({isOpen, onclose, onsubmit}) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-md">
         <div className="flex justify-between items-center p-4 border-b border-base-300">
+          <h3 className="text-xl font-bold">Create New Playlist</h3>
           <button onClick={onclose} className="btn btn-ghost btn-sm btn-circle">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form
-          onsubmit={handleSubmit(handleFormSubmit)}
+          onSubmit={handleSubmit(handleFormSubmit)}
           className="p-6 space-y-4"
         >
           <div className="form-control">

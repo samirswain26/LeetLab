@@ -8,7 +8,7 @@ export const UsePlayListStore = create((set, get) => ({
   isLoading: false,
   error: null,
 
-  createPlaylsit: async (PlayListData) => {
+  createPlaylist: async (PlayListData) => {
     try {
       set({ isLoading: true });
       const res = await axiosInstance.post(
@@ -18,11 +18,12 @@ export const UsePlayListStore = create((set, get) => ({
       set((state) => ({
         playLists: [...state.playLists, res.data.playlist],
       }));
-      toast.success(res.data.message);
+      toast.success( res.data?.message || "Playlist created successfully");
+      console.log("Create playlist data is : ", res.data)
       return res.data.playlist;
     } catch (error) {
-      console.log.og("Error creating Playlist", error);
-      toast.error(error.res?.data?.error || "Failed to create playlist");
+      console.log("Error creating Playlist", error);
+      toast.error(error.response?.data?.error || "Failed to create playlist");
       throw error;
     } finally {
       set({ isLoading: false });
@@ -33,12 +34,12 @@ export const UsePlayListStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const res = await axiosInstance.get("/Play-List/");
-      set({ playlists: res.data.playlist });
+      set({ playLists: res.data.playlist });
     } catch (error) {
       console.log("Error fetching playlists : ", error);
       toast.error("Failed to fetch playlist");
     } finally {
-      set({ isLoading: fasle });
+      set({ isLoading: false });
     }
   },
 
@@ -104,7 +105,7 @@ export const UsePlayListStore = create((set, get) => ({
         error.res.data?.error || "Failed to remove problem from playlist"
       );
     } finally {
-      set({ isLoading: fasle });
+      set({ isLoading: false });
     }
   },
 

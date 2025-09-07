@@ -25,6 +25,7 @@ const ProblemTable = ({ problems }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] =
     useState(false);
+  const [selectedProblemId, setSelectedProblemId] = useState(null)
 
   const { isDeletingProblem, delteProblem } = useAction();
 
@@ -70,7 +71,10 @@ const ProblemTable = ({ problems }) => {
     delteProblem(id);
   };
 
-  const handleAddToPlaylist = (id) => {};
+  const handleAddToPlaylist = (problemId) => {
+    setSelectedProblemId(problemId)
+    setIsAddToPlaylistModalOpen(true)
+  };
 
   const handleEdit = async (id) => {
     console.log(id);
@@ -260,6 +264,11 @@ const ProblemTable = ({ problems }) => {
         isOpen={isCreateModalOpen}
         onclose={() => setIsCreateModalOpen(false)}
         onSubmit={handleCreatePlayList}
+      />
+      <AddToPlayList 
+        isOpen={isAddToPlaylistModalOpen}
+        onClose = {() => setIsAddToPlaylistModalOpen(false)}
+        problemId = {selectedProblemId}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, User, Shield, Image, AtSign } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import ProblemSolvedByUser from "../components/ProblemSolvedByUser";
 
 const ProfilePage = () => {
   const { authUser } = useAuthStore();
@@ -118,6 +119,9 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <ProblemSolvedByUser />
       </div>
     </div>
   );

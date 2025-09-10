@@ -1,35 +1,17 @@
 import React, { useMemo, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import {
-  Bookmark,
-  PencilIcon,
-  Trash,
-  TrashIcon,
-  Plus,
-  Loader2,
-} from "lucide-react";
 
-import { useAction } from "../store/useAction.js";
-import { UsePlayListStore } from "../store/usePlayListStore.js";
-import AddToPlayList from "./AddToPlayList.jsx";
-import CreatePlayListModal from "./createPlaylistModal.jsx";
 
-const ProblemTable = ({ problems }) => {
+const ProblemtableOnProblemPage = ({ problems }) => {
   const { authUser } = useAuthStore();
 
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedTag, setSelectedTag] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] =
-    useState(false);
-  const [selectedProblemId, setSelectedProblemId] = useState(null)
 
-  const { isDeletingProblem, delteProblem } = useAction();
 
-  const { createPlaylist } = UsePlayListStore();
 
   console.log("Problem is in problemtable is :" , problems)
 
@@ -60,7 +42,7 @@ const ProblemTable = ({ problems }) => {
   }, [problems, search, difficulty, selectedTag]);
 
   // Pagination for the table data
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
   const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
   const paginatedProblems = useMemo(() => {
     return filteredProblems.slice(
@@ -69,35 +51,13 @@ const ProblemTable = ({ problems }) => {
     );
   }, [filteredProblems, currentPage]);
 
-  const handleDelete = (id) => {
-    delteProblem(id);
-  };
-
-  const handleAddToPlaylist = (problemId) => {
-    setSelectedProblemId(problemId)
-    setIsAddToPlaylistModalOpen(true)
-  };
-
-  const handleEdit = async (id) => {
-    console.log(id);
-  };
-
-  const handleCreatePlayList = async (data) => {
-    await createPlaylist(data);
-  };
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
       {/* Header with create playlist button */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold ">Problems</h2>
-        <button
-          className="btn btn-primary gap-2"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
-          <Plus className="w-4 h-4" />
-          Create Playlist
-        </button>
+        
       </div>
 
       <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
@@ -142,7 +102,6 @@ const ProblemTable = ({ problems }) => {
               <th>Title</th>
               <th>Tags</th>
               <th>Difficulty</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -195,38 +154,6 @@ const ProblemTable = ({ problems }) => {
                       </span>
                     </td>
                     <td>
-                      <div className="flex flex-col md:flex-row gap-2 items-start md:items-center2">
-                        {authUser?.role === "ADMIN" && (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleDelete(problem.id)}
-                              className="btn btn-sm btn-error"
-                            >
-                              {isDeletingProblem ? (
-                                <Loader2 className="animate-spin h-4 w-4" />
-                              ) : (
-                                <TrashIcon className="w-4 h-4 text-white" />
-                              )}
-                            </button>
-                            <button
-                              // disabled
-                              onClick={() => handleEdit(problem.id)}
-                              className="btn btn-sm btn-warning"
-                            >
-                              <PencilIcon className="w-4 h-4 text-white" />
-                            </button>
-                          </div>
-                        )}
-                        <button
-                          className="btn btn-sm btn-outline flex gap-2 items-center"
-                          onClick={() => handleAddToPlaylist(problem.id)}
-                        >
-                          <Bookmark className="w-4 h-4" />
-                          <span className="hidden sm:inline">
-                            Save to Playlist
-                          </span>
-                        </button>
-                      </div>
                     </td>
                   </tr>
                 );
@@ -262,18 +189,8 @@ const ProblemTable = ({ problems }) => {
         </button>
       </div>
 
-      <CreatePlayListModal
-        isOpen={isCreateModalOpen}
-        onclose={() => setIsCreateModalOpen(false)}
-        onSubmit={handleCreatePlayList}
-      />
-      <AddToPlayList 
-        isOpen={isAddToPlaylistModalOpen}
-        onClose = {() => setIsAddToPlaylistModalOpen(false)}
-        problemId = {selectedProblemId}
-      />
     </div>
   );
 };
 
-export default ProblemTable;
+export default ProblemtableOnProblemPage;

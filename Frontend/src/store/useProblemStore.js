@@ -35,7 +35,7 @@ export const useProblemStore = create((set) => ({
       toast.success(res.data.message);
     } catch (error) {
       console.log("Error in getting the problem :", error);
-      toast(res.data.message || "Error in getting the problems");
+      toast("Error in getting the problems");
     } finally {
       set({ isProblemLoading: false });
     }

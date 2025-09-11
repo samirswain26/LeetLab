@@ -9,7 +9,6 @@ const PlayListCreatedByUser = () => {
 
   useEffect(() => {
     getAllPlayLists();
-    console.log("Get all playlist is : ", getAllPlayLists);
   }, [getAllPlayLists]);
 
   const handleDelete = async (PlayListId) => {

@@ -169,24 +169,24 @@ const ProblemPage = () => {
           </div>
         );
       case "hints":
-        return (
-          <div className="p-4 text-center text-base-content/70"> No Hints </div>
-        );
-      // return (
-      //   <div className="p-4">
-      //     {problem?.hints ? (
-      //       <div className="bg-base-200 p-6 rounded-xl">
-      //         <span className="bg-black/90 px-4 py-1 rounded-lg font-semibold text-white text-lg">
-      //           {problem.hints}
-      //         </span>
-      //       </div>
-      //     ) : (
-      //       <div className="text-center text-base-content/70">
-      //         No hints available
-      //       </div>
-      //     )}
-      //   </div>
-      // );
+        // return (
+        //   <div className="p-4 text-center text-base-content/70"> No Hints </div>
+        // );
+      return (
+        <div className="p-4">
+          {problem?.hints ? (
+            <div className="bg-base-200 p-6 rounded-xl">
+              <span className="bg-black/90 px-4 py-1 rounded-lg font-semibold text-white text-lg">
+                {problem.hints}
+              </span>
+            </div>
+          ) : (
+            <div className="text-center text-base-content/70">
+              No hints available
+            </div>
+          )}
+        </div>
+      );
       default:
         return null;
     }

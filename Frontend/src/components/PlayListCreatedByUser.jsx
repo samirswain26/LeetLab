@@ -49,7 +49,14 @@ const PlayListCreatedByUser = () => {
                 <tbody>
                   {playLists.map((playlists) => (
                     <tr key={playlists.id} className="hover">
-                      <td className="font-medium"> {playlists.name} </td>
+                      <td className="font-medium">
+                        <Link 
+                            to={`/Play-List/${playlists.id}`}
+                            className="font-semibold hover:underline"
+                        >
+                            {playlists.name}
+                        </Link>
+                      </td>
                       <td className="font-medium"> {playlists.description} </td>
                       <td>
                         <button

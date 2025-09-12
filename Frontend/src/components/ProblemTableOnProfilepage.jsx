@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 
 
-const ProblemtableOnProblemPage = ({ problems }) => {
+const ProblemTableOnProfilepage = ({ problems }) => {
   const { authUser } = useAuthStore();
 
   const [search, setSearch] = useState("");
@@ -193,4 +193,4 @@ const ProblemtableOnProblemPage = ({ problems }) => {
   );
 };
 
-export default ProblemtableOnProblemPage;
+export default ProblemTableOnProfilepage;

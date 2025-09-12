@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useProblemStore } from "../store/useProblemStore";
 import { Loader } from "lucide-react";
-import ProblemtableOnProblemPage from "../components/ProblemTableOnProblempage.lsx";
+import ProblemtableOnProblemPage from "../components/ProblemTableOnProfilepage";
 
 const ProblemsPage = () => {
   const { getAllProblems, problems, isProblemsLoading } = useProblemStore();

@@ -87,17 +87,19 @@ export const UsePlayListStore = create((set, get) => ({
       const res = await axiosInstance.delete(
         `/Play-List/${playlistId}/remove-problem`,
         {
-          problemIds,
+          data : {problemIds},
         }
       );
       toast.success(res.data?.message || "Problem removed from playlist");
 
+      
       //Refresh the playlist details
-      if (get().currentPlayList?.id === playlistId) {
-        return get().getAllPlayLists(playlistId);
-      } else {
-        return "Something went wrong while removing problems.";
+      if(get().currentPlayList?.id === playlistId) {
+        return get().getPlayListDetails(playlistId)
       }
+
+     
+      
     } catch (error) {
       console.error("Error removing problem from playlist : ", error);
       toast.error("Failed to remove problem from playlist"

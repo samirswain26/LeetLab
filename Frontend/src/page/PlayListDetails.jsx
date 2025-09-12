@@ -35,6 +35,11 @@ const PlayListDetails = () => {
       </div>
     </div>;
   }
+
+  const handleProblemDelete = async(id,problemId) => {
+    removeProblemFromPlaylist(id,[problemId]) //Send array of problemId
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       {isLoading ? (
@@ -75,10 +80,11 @@ const PlayListDetails = () => {
             </div>
           </nav>
           <div className="container mx-auto p-5">
-            <table className="table table-zebra table-lg bg-base-200 text-base-content" >
-              <thead className="bg-base-300" >
+            <table className="table table-zebra table-lg bg-base-200 text-base-content">
+              <thead className="bg-base-300">
                 <tr>
                   <th>Name</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,6 +99,19 @@ const PlayListDetails = () => {
                           >
                             {ep.problem?.title}
                           </Link>
+                        </td>
+                        <td>
+                          <button
+                            // onClick={() => handleDelete(playlists.id)}
+                            onClick={() => handleProblemDelete( currentPlayList.id , ep?.problem?.id)}
+                            className="btn btn-sm btn-error"
+                          >
+                            {isLoading ? (
+                              <Loader2 className="animate-spin h-4 w-4" />
+                            ) : (
+                              <TrashIcon className="w-4 h-4 text-white" />
+                            )}
+                          </button>
                         </td>
                       </tr>
                     );

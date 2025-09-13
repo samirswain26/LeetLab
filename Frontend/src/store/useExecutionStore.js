@@ -18,7 +18,7 @@ export const useExecutionStore = create((set) => ({
                 source_code, language_id, stdin, expected_outputs, problemId
             })
 
-            console.log("Setting submission:", res.data.submissionWithTestCase );
+            console.log("Setting submission:", res.data.submissionWithTestCase.sourceCode);
             console.log("Backend response:", res.data);
             set({submission: res.data.submissionWithTestCase })
             toast.success(res.data.message)

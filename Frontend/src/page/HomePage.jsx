@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useProblemStore } from "../store/useProblemStore";
 import { Loader } from "lucide-react";
 import ProblemTable from "../components/ProblemTable";
-// import ProblemPages from "../components/ProblemPage";
 
 const HomePage = () => {
   const { getAllProblems, problems, isProblemsLoading } = useProblemStore();
@@ -39,13 +38,7 @@ const HomePage = () => {
           No problems found
         </p>
       )}
-      {/* {problems.length > 0 ? (
-        <ProblemPages problems={problems} />
-      ) : (
-        <p className="mt-10 text-center text-lg font-semibold text-gray-500 dark:text-gray-400 z-10 border border-primary px-4 py-2 rounded-md border-dashed">
-          No problems found
-        </p>
-      )} */}
+
     </div>
   );
 };

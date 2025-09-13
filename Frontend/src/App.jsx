@@ -14,6 +14,7 @@ import ProblemPage from "./page/ProblemPage.jsx";
 import ProfilePage from "./page/ProfilePage.jsx";
 import ProblemsPage from "./page/ProblemsPage.jsx";
 import PlayListDetails from "./page/PlayListDetails.jsx";
+import SolvedProblemPage from "./page/SolvedProblemPage.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
@@ -66,6 +67,10 @@ const App = () => {
         <Route
           path="/problems"
           element={authUser ? <ProblemsPage /> : <Navigate to={"/Login"} />}
+        />
+        <Route
+          path="/problems/:id"
+          element={authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />}
         />
         <Route element={<AdminRoute />}>
           <Route

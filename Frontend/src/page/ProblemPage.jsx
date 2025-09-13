@@ -74,6 +74,7 @@ const ProblemPage = () => {
   },[activeTab,id])
 
   console.log("Submissions :::", submissions)
+  console.log("Hints is : ", problem.hints)
 
 
   const handleLanguageChange = (e) => {
@@ -233,9 +234,6 @@ const ProblemPage = () => {
                   <span className="text-base-content/30">•</span>
                   <Users className="w-4 h-4" />
                   <span> {submissionCount} Submissions</span>
-                  <span className="text-base-content/30">•</span>
-                  <ThumbsUp className="w-4 h-4" />
-                  <span>95% Success Rate</span>
                 </div>
               </div>
             </div>
@@ -336,6 +334,8 @@ const ProblemPage = () => {
                         scrollBeyondLastLine: false,
                         readOnly: false,
                         automaticLayout: true,
+                        // wordWrap: "on",
+                        formatOnType: true
                       }}
                     />
                   </div>

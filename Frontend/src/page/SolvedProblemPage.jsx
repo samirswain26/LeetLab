@@ -285,16 +285,16 @@ const SolvedProblemPage = () => {
                       language={selectedLanguage.toLowerCase()}
                       theme="vs-dark"
                       value={code}
-                      //   onChange={() => submission}
-                      //   onChange={(value) => setCode(value || "")}
                       options={{
                         minimap: { enabled: false },
-                        fontSize: 22,
+                        fontSize: 20,
                         lineNumbers: "on",
                         roundedSelection: false,
                         scrollBeyondLastLine: false,
                         readOnly: false,
                         automaticLayout: true,
+                        wordWrap: "on",
+                        formatOnType: true
                       }}
                     />
                   </div>

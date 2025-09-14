@@ -65,7 +65,7 @@ export const createProblem = async (req, res) => {
       }
     }
 
-    const newProblem = await db.problem.create({
+    const newProblem = await db.SubscriptionProblem.create({
       data: {
         title,
         description,
@@ -95,7 +95,36 @@ export const createProblem = async (req, res) => {
     });
   }
 };
-export const getAllProblems = async (req, res) => {};
+
+export const getAllProblems = async (req, res) => {
+  try {
+    const problems = await db.SubscriptionProblem.findMany({
+      include: {
+        solvedBy: {
+          where: {
+            userId: req.user.id,
+          },
+        },
+      },
+    });
+    if (!problems) {
+      return res.status(404).json({
+        error: "No problems found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Problems Fetched Successfully",
+      problems,
+    });
+  } catch (error) {
+    console.log("Get all project Error is : ", error);
+    return res.status(500).json({
+      error: "Error while fetching problems.",
+    });
+  }
+};
 export const getProblemById = async (req, res) => {};
 export const updateProblem = async (req, res) => {};
 export const deleteProblem = async (req, res) => {};

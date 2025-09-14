@@ -74,7 +74,7 @@ const ProblemPage = () => {
   },[activeTab,id])
 
   console.log("Submissions :::", submissions)
-  console.log("Hints is : ", problem.hints)
+  // console.log("Hints is : ", problem.hints)
 
 
   const handleLanguageChange = (e) => {

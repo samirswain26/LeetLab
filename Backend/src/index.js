@@ -9,6 +9,7 @@ import problemRoutes from "./routes/problem.routes.js";
 import executionRoute from "./routes/executeCode.routes.js";
 import submissionRoutes from "./routes/submission.routes.js";
 import playlistRoutes from "./routes/playlist.routes.js";
+import SubscriptionProblemRoutes from "./routes/subscriptionProblem.routes.js";
 
 dotenv.config({ path: "./.env" });
 const app = express();
@@ -29,6 +30,9 @@ app.use("/api/v1/problems", problemRoutes);
 app.use("/api/v1/execute-code", executionRoute);
 app.use("/api/v1/submission", submissionRoutes);
 app.use("/api/v1/Play-List", playlistRoutes);
+// Subscription Endpoints
+app.use("/api/v1/subscription-problems", SubscriptionProblemRoutes);
+
 
 const port = process.env.PORT || 4000;
 

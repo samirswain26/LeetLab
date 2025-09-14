@@ -22,6 +22,7 @@ model User {
   submission    Submission[]
   problemSolved problemSolved[]
   playlist      Playlist[]
+  SubscriptionProblems SubscriptionProblem[]
 }
 
 model Problem {
@@ -144,4 +145,30 @@ model ProblemInPlaylist {
   problem  Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([playlistId, problemId])
+}
+
+// Subscription Models
+
+model SubscriptionProblem {
+  id String @id @default(uuid())
+  title              String
+  description        String
+  difficulty         Difficulty
+  tags               String[]
+  userId             String
+  examples           Json
+  constraints        String
+  hints              String
+  editorial          String
+  testcases          Json
+  codeSnippets       Json
+  referenceSolutions Json
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @default(now())
+  user               User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // submission       Submission[]
+  // solvedBy         problemSolved[]
+  // problemPlaylists ProblemInPlaylist[]
+
 }

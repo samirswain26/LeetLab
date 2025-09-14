@@ -2,7 +2,6 @@ import { User, Code, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { Link } from "react-router-dom";
 import { LogoutButton } from "./LogoutButton.jsx";
-
 export const Navbar = () => {
   const { authUser } = useAuthStore();
   console.log("AUTH_USER", authUser);
@@ -21,6 +20,14 @@ export const Navbar = () => {
 
         {/* User profile and Dropdown section */}
         <div className="flex items-center gap-8">
+          <div className=" btn dropdown  dropdown-end">
+            <Link
+              to={"/subscription-Model"}
+              className="flex items-center gap-3 cursor-pointer"
+            >
+              Subscriptions
+            </Link>
+          </div>
           <div className="dropdown dropdown-end">
             <label
               tabIndex={0}
@@ -65,6 +72,17 @@ export const Navbar = () => {
                   >
                     <Code className="w-4 h-4 mr-1" />
                     Add Problem
+                  </Link>
+                </li>
+              )}
+              {authUser?.role === "ADMIN" && (
+                <li>
+                  <Link
+                    to="/add-Subscriptions"
+                    className="hover:bg-primary hover:text-white text-base font-semibold"
+                  >
+                    <Code className="w-4 h-4 mr-1" />
+                    Add Subscription Model
                   </Link>
                 </li>
               )}

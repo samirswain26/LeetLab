@@ -249,5 +249,37 @@ export const updateProblem = async (req, res) => {
   }
 };
 
-export const deleteProblem = async (req, res) => {};
+export const deleteProblem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const problem = await db.SubscriptionProblem.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        error: `Problem with id ${id} not found`,
+      });
+    }
+
+    await db.SubscriptionProblem.delete({
+      where: {
+        id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Problem deleted successfully",
+    });
+  } catch (error) {
+    console.log("Delete Problem", error);
+    res.status(500).json({
+      error: "Failed to delete the problem.",
+    });
+  }
+};
+
 export const getAllProblemSolvedByUser = async (req, res) => {};

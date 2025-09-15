@@ -125,7 +125,33 @@ export const getAllProblems = async (req, res) => {
     });
   }
 };
-export const getProblemById = async (req, res) => {};
+export const getProblemById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const problem = await db.SubscriptionProblem.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        error: "Problem not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "problem Fetched Successfully",
+      problem,
+    });
+  } catch (error) {
+    console.log("Get project by id Error is  : ", error);
+    return res.status(500).json({
+      error: "Error while fetching problem.",
+    });
+  }
+};
 export const updateProblem = async (req, res) => {};
 export const deleteProblem = async (req, res) => {};
 export const getAllProblemSolvedByUser = async (req, res) => {};

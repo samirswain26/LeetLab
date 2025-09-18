@@ -55,10 +55,9 @@ export const CretaeSubsriptionPlaylist = async (req, res) => {
 
 export const getAllSubscriptionPlaylist = async (req, res) => {
   try {
-
     const playlist = await db.SubscriptionPlaylist.findMany({
       where: {
-        createdByRole: "ADMIN" //Only Admin created playlist the user can only get
+        createdByRole: "ADMIN", //Only Admin created playlist the user can only get
       },
       include: {
         problems: {
@@ -88,7 +87,45 @@ export const getAllSubscriptionPlaylist = async (req, res) => {
   }
 };
 
-export const getSubsriptionPlaylistDetails = async (req, res) => {};
+export const getSubsriptionPlaylistDetails = async (req, res) => {
+  try {
+    const { playlistId } = req.params;
+    console.log("Playlist Id is : ", playlistId)
+
+    const playlist = await db.SubscriptionPlaylist.findUnique({
+      where: {
+        id: playlistId,
+        // userId: req.user.id,
+        createdByRole: "ADMIN"
+      },
+      include: {
+        problems: {
+          include: {
+            problem: true,
+          },
+        },
+      },
+    });
+
+    if (!playlist) {
+      return res.status(404).json({
+        error: "Playlists not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Get playlist details",
+      playlist,
+    });
+  } catch (error) {
+    console.log("Error in fetching the playlist details :", error);
+    res.status(500).json({
+      error: "Error in Fetching the playlist details",
+    });
+  }
+};
+
 export const addProblemToPlaylist = async (req, res) => {};
 export const deletePlaylist = async (req, res) => {};
 export const RemoveProblemFromPlaylist = async (req, res) => {};

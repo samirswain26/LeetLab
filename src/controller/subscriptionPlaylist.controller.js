@@ -209,7 +209,49 @@ export const addProblemToPlaylist = async (req, res) => {
   } catch (error) {}
 };
 
-export const deletePlaylist = async (req, res) => {};
+export const deletePlaylist = async (req, res) => {
+  try {
+    const { playlistId } = req.params;
+
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({
+        error: "You are not allowed to delete the Playlist.",
+      });
+    }
+
+    const playlist = await db.SubscriptionPlaylist.findUnique({
+      where: {
+        id: playlistId,
+        createdByRole: "ADMIN",
+      },
+    });
+
+    if (!playlist) {
+      return res.status(404).json({
+        error: "Playlists not found",
+      });
+    }
+
+    const deletePlaylist = await db.SubscriptionPlaylist.delete({
+      where: {
+        id: playlistId,
+        createdByRole: "ADMIN",
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Play list deleted successfully",
+      deletePlaylist,
+    });
+  } catch (error) {
+    console.log("Error in deleting playlist :", error);
+    res.status(500).json({
+      error: "Error in deleting playlist",
+    });
+  }
+};
+
 export const RemoveProblemFromPlaylist = async (req, res) => {};
 
 //

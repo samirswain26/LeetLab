@@ -252,7 +252,42 @@ export const deletePlaylist = async (req, res) => {
   }
 };
 
-export const RemoveProblemFromPlaylist = async (req, res) => {};
+export const RemoveProblemFromPlaylist = async (req, res) => {
+  try {
+    const { playlistId } = req.params;
+    const { problemIds } = req.body;
+
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      res.status(400).json({ error: "Invalid or missing problemId" });
+    }
+
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({
+        error: "You are not allowed to delete the problem from the playlist.",
+      });
+    }
+
+    const deleteProblem = await db.ProblemInSubscriptionPlaylist.deleteMany({
+      where: {
+        playlistId,
+        problemId: {
+          in: problemIds,
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Problem reoved from the playlist",
+      deleteProblem,
+    });
+  } catch (error) {
+    console.log("Error in deleting problem :", error);
+    res.status(500).json({
+      error: "Error in deleting problem",
+    });
+  }
+};
 
 //
 export const GetAllPlaylistSubscribedByUser = async (req, res) => {};

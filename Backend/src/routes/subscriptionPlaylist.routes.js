@@ -20,7 +20,7 @@ SubscriptionPlaylist.post(
 SubscriptionPlaylist.get("/", authMiddleware, getAllSubscriptionPlaylist);
 SubscriptionPlaylist.get("/:playlistId", authMiddleware, getSubsriptionPlaylistDetails);
 SubscriptionPlaylist.post("/:playlistId/add-problem", authMiddleware, addProblemToPlaylist);
-SubscriptionPlaylist.post("/:playlistId", authMiddleware, deletePlaylist);
+SubscriptionPlaylist.delete("/:playlistId", authMiddleware, deletePlaylist);
 SubscriptionPlaylist.post("/:playlistId/remove-problem", authMiddleware, RemoveProblemFromPlaylist);
 
 //

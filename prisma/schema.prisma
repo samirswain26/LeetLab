@@ -24,10 +24,10 @@ model User {
   playlist      Playlist[]
 
   // Subscription Models
-  SubscriptionProblems SubscriptionProblem[]
-  SubscriptionSubmission SubscriptionSubmission[]
+  SubscriptionProblems    SubscriptionProblem[]
+  SubscriptionSubmission  SubscriptionSubmission[]
   SubmissionProblemSolved SubscriptionproblemSolved[]
-  SubscriptionPlaylist SubscriptionPlaylist[]
+  SubscriptionPlaylist    SubscriptionPlaylist[]
 }
 
 model Problem {
@@ -152,11 +152,10 @@ model ProblemInPlaylist {
   @@unique([playlistId, problemId])
 }
 
-
 // Subscription Models
 
 model SubscriptionProblem {
-  id String @id @default(uuid())
+  id                 String     @id @default(uuid())
   title              String
   description        String
   difficulty         Difficulty
@@ -176,7 +175,6 @@ model SubscriptionProblem {
   submission       SubscriptionSubmission[]
   solvedBy         SubscriptionproblemSolved[]
   problemPlaylists ProblemInSubscriptionPlaylist[]
-
 }
 
 model SubscriptionSubmission {
@@ -196,7 +194,7 @@ model SubscriptionSubmission {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   SubscriptionProblem SubscriptionProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   testcase SubscriptionTestCaseResult[]
@@ -231,7 +229,7 @@ model SubscriptionproblemSolved {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem SubscriptionProblem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
@@ -249,6 +247,8 @@ model SubscriptionPlaylist {
   problems ProblemInSubscriptionPlaylist[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdByRole String @default("USER") // NEW field: who created this playlist (ADMIN or USER)
 
   @@unique([name, userId])
 }

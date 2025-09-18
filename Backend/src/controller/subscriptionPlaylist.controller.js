@@ -16,6 +16,21 @@ export const CretaeSubsriptionPlaylist = async (req, res) => {
       });
     }
 
+    const checkName = await db.SubscriptionPlaylist.findUnique({
+      where: {
+        name_userId: {
+          name,
+          userId: req.user.id,
+        },
+      },
+    });
+
+    if (checkName) {
+      return res.status(400).json({
+        error: "Playlist Name already exists",
+      });
+    }
+
     const playlist = await db.SubscriptionPlaylist.create({
       data: {
         name,
@@ -37,7 +52,42 @@ export const CretaeSubsriptionPlaylist = async (req, res) => {
   }
 };
 
-export const getAllSubscriptionPlaylist = async (req, res) => {};
+export const getAllSubscriptionPlaylist = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const playlist = await db.SubscriptionPlaylist.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        problems: {
+          include: {
+            problem: true,
+          },
+        },
+      },
+    });
+
+    if (!playlist) {
+      res.status(404).json({
+        error: "Playlists not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Get all playlists",
+      playlist,
+    });
+  } catch (error) {
+    console.log("Error in get all playlist :", error);
+    res.status(500).json({
+      error: "Error in getting playlists",
+    });
+  }
+};
+
 export const getSubsriptionPlaylistDetails = async (req, res) => {};
 export const addProblemToPlaylist = async (req, res) => {};
 export const deletePlaylist = async (req, res) => {};

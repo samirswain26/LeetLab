@@ -36,6 +36,7 @@ export const CretaeSubsriptionPlaylist = async (req, res) => {
         name,
         description,
         userId: req.user.id,
+        createdByRole: "ADMIN", // mark as ADMIN playlist
       },
     });
 
@@ -54,11 +55,10 @@ export const CretaeSubsriptionPlaylist = async (req, res) => {
 
 export const getAllSubscriptionPlaylist = async (req, res) => {
   try {
-    const userId = req.user.id;
 
     const playlist = await db.SubscriptionPlaylist.findMany({
       where: {
-        userId: userId,
+        createdByRole: "ADMIN" //Only Admin created playlist the user can only get
       },
       include: {
         problems: {

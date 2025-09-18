@@ -90,13 +90,12 @@ export const getAllSubscriptionPlaylist = async (req, res) => {
 export const getSubsriptionPlaylistDetails = async (req, res) => {
   try {
     const { playlistId } = req.params;
-    console.log("Playlist Id is : ", playlistId)
+    console.log("Playlist Id is : ", playlistId);
 
     const playlist = await db.SubscriptionPlaylist.findUnique({
       where: {
         id: playlistId,
-        // userId: req.user.id,
-        createdByRole: "ADMIN"
+        createdByRole: "ADMIN",
       },
       include: {
         problems: {
@@ -126,7 +125,90 @@ export const getSubsriptionPlaylistDetails = async (req, res) => {
   }
 };
 
-export const addProblemToPlaylist = async (req, res) => {};
+export const addProblemToPlaylist = async (req, res) => {
+  const { playlistId } = req.params;
+  const { problemIds } = req.body;
+  try {
+    const playlist = await db.SubscriptionPlaylist.findUnique({
+      where: {
+        id: playlistId,
+        createdByRole: "ADMIN",
+      },
+    });
+
+    if (!playlist) {
+      return res.status(404).json({
+        error: "Playlists not found",
+      });
+    }
+    if (req.user.role !== "ADMIN") {
+      return res.status(403).json({
+        error: "You are not allowed to add problem to the Playlist.",
+      });
+    }
+
+    let problemsArray = [];
+
+    if (Array.isArray(problemIds)) {
+      problemsArray = problemIds;
+    } else if (typeof problemIds === "string") {
+      problemsArray = [problemIds]; // wrap single id in array
+    } else {
+      return res.status(400).json({
+        error: "Invalid problemIds format",
+      });
+    }
+
+    for (const problemId of problemsArray) {
+      const problem = await db.SubscriptionProblem.findUnique({
+        where: { id: problemId },
+      });
+
+      if (!problem) {
+        return res.status(404).json({
+          error: `Problem id not found`,
+        });
+      }
+    }
+
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      res.status(400).json({
+        error: "Invalid or missing problem",
+      });
+    }
+
+    const existingProblems = await db.ProblemInSubscriptionPlaylist.findMany({
+      where: {
+        playlistId,
+        problemId: { in: problemsArray },
+      },
+    });
+
+    if (existingProblems.length > 0) {
+      return res.status(400).json({
+        error: "Some problems already exist in the playlist",
+        existingProblemIds: existingProblems.map((p) => p.problemId),
+      });
+    }
+
+    //create record in the playlists
+
+    const problemsInPlaylist =
+      await db.ProblemInSubscriptionPlaylist.createMany({
+        data: problemIds.map((problemId) => ({
+          playlistId,
+          problemId,
+        })),
+      });
+
+    res.status(201).json({
+      success: true,
+      message: "Problem added to the playlist successfully",
+      problemsInPlaylist,
+    });
+  } catch (error) {}
+};
+
 export const deletePlaylist = async (req, res) => {};
 export const RemoveProblemFromPlaylist = async (req, res) => {};
 

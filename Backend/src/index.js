@@ -13,6 +13,7 @@ import playlistRoutes from "./routes/playlist.routes.js";
 import SubscriptionProblemRoutes from "./routes/subscriptionProblem.routes.js";
 import SubscriptionexecutionRoute from "./routes/subscriptionExecuteCode.router.js";
 import SubscriptionSubmissionRoute from "./routes/subscriptionSubmission.routes.js";
+import SubscriptionPlaylist from "./routes/subscriptionPlaylist.routes.js";
 
 import Payment from "./routes/Payment.routes.js";
 
@@ -41,6 +42,7 @@ app.use("/api/v1/Play-List", playlistRoutes);
 app.use("/api/v1/subscription-problems", SubscriptionProblemRoutes);
 app.use("/api/v1/subscription-execute-code", SubscriptionexecutionRoute);
 app.use("/api/v1/subscription-submission", SubscriptionSubmissionRoute);
+app.use("/api/v1/subscription-Playlist", SubscriptionPlaylist);
 
 app.use("/api/v1/payment", Payment);
 

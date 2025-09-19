@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware } from "../middleware/auth.middleware.js";
+import { authMiddleware, purchased } from "../middleware/auth.middleware.js";
 import {
     addProblemToPlaylist,
   CretaeSubsriptionPlaylist,
@@ -18,7 +18,7 @@ SubscriptionPlaylist.post(
   CretaeSubsriptionPlaylist
 );
 SubscriptionPlaylist.get("/", authMiddleware, getAllSubscriptionPlaylist);
-SubscriptionPlaylist.get("/:playlistId", authMiddleware, getSubsriptionPlaylistDetails);
+SubscriptionPlaylist.get("/:playlistId", authMiddleware, purchased ,getSubsriptionPlaylistDetails);
 SubscriptionPlaylist.post("/:playlistId/add-problem", authMiddleware, addProblemToPlaylist);
 SubscriptionPlaylist.delete("/:playlistId", authMiddleware, deletePlaylist);
 SubscriptionPlaylist.delete("/:playlistId/remove-problem", authMiddleware, RemoveProblemFromPlaylist);

@@ -71,3 +71,43 @@ export const checkAdmin = async (req, res, next) => {
     res.status(500).json({ message: "Error checking admin role." });
   }
 };
+
+export const purchased = async (req, res, next) => {
+  try {
+    const { playlistId } = req.params;
+
+    const playlist = await db.SubscriptionPlaylist.findUnique({
+      where: { id: playlistId },
+    });
+
+    if (!playlist) {
+      return res.status(404).json({ error: "Playlist not found" });
+    }
+
+    if (req.user.role === "ADMIN") {
+      return next();
+    }
+
+    const purchase = await db.SubscriptionPurchase.findUnique({
+      where: {
+        userId_playlistId: {
+          userId: req.user.id,
+          playlistId: playlistId,
+        },
+      },
+    });
+
+    if (!purchase || purchase.status !== "SUCCESS") {
+      return res.status(403).json({
+        error: "You must purchase this playlist to access it.",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.log("error in purchase middleware:", error);
+    res.status(500).json({
+      message: "Error in checking purchase list middleware",
+    });
+  }
+};

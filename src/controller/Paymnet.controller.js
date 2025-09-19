@@ -1,4 +1,5 @@
 import { PaymentInstance } from "../Libs/paymentGateway.js";
+import { db } from "../Libs/db.js";
 
 export const TrialPayment = async (req, res) => {
   try {
@@ -12,6 +13,7 @@ export const TrialPayment = async (req, res) => {
       currency: "INR",
     };
 
+    console.log("Payment key_id : ", PaymentInstance.key_id);
     const Order = await PaymentInstance.orders.create(options);
 
     res.status(200).json({
@@ -30,24 +32,72 @@ export const TrialPayment = async (req, res) => {
 
 export const createOrder = async (req, res) => {
   try {
-    const { amount, currency = "INR", subscriptionPlaylistId } = req.body;
-    const { userId } = req.user.id;
+    const { playlistId, amount } = req.body;
+
+    // Validate input
+    if (!playlistId || !amount || isNaN(amount)) {
+      return res.status(400).json({
+        success: false,
+        error: "Playlist ID and valid amount are required",
+      });
+    }
+
+    const playlist = await db.SubscriptionPlaylist.findUnique({
+      where: {
+        id: playlistId,
+      },
+    });
+
+    if (!playlist) {
+      return res.status(404).json({
+        error: "Playlist not found",
+      });
+    }
+
+    // Amount in paise (INR smallest unit)
+    const finalAmount = Number(amount) * 100;
 
     const options = {
-      amount: amount * 100,
-      currency,
+      amount: finalAmount,
+      currency: "INR",
       receipt: `receipt_${Date.now()}`,
     };
 
     const order = await PaymentInstance.orders.create(options);
 
+    console.log("Razorpay order created:", order);
+
+    if (!order || !order.id) {
+      return res.status(500).json({
+        success: false,
+        error: "Failed to create Razorpay order",
+      });
+    }
+
+    // ⚠️ Make sure req.user exists (authentication middleware)
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        error: "Unauthorized: User not logged in",
+      });
+    }
+
+    // Save in DB as pending
+    await db.SubscriptionPurchase.create({
+      data: {
+        userId: req.user.id,
+        playlistId,
+        razorpayOrderId: order.id,
+        amount: options.amount,
+        currency: options.currency,
+        status: "PENDING",
+      },
+    });
+
     res.status(200).json({
       success: true,
-      orderId: order.id,
-      amount: order.amount,
-      Currency: order.currency,
-      subscriptionPlaylistId,
-      key: PaymentInstance.key,
+      message: "Playlist added to purchase table with a valid amount",
+      order,
     });
   } catch (error) {
     console.error("Error creating Razorpay order:", error);

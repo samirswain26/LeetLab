@@ -1,8 +1,10 @@
-import express from "express"
-import { TrialPayment } from "../controller/Paymnet.controller.js"
+import express from "express";
+import { createOrder, TrialPayment } from "../controller/Paymnet.controller.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
 
-const Payment = express.Router()
+const Payment = express.Router();
 
-Payment.post("/payment-1", TrialPayment)
+Payment.post("/payment-1", TrialPayment);
+Payment.post("/create-order",authMiddleware, createOrder);
 
-export default Payment
+export default Payment;

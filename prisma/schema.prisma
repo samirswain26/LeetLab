@@ -28,6 +28,7 @@ model User {
   SubscriptionSubmission  SubscriptionSubmission[]
   SubmissionProblemSolved SubscriptionproblemSolved[]
   SubscriptionPlaylist    SubscriptionPlaylist[]
+  SubscriptionPurchase  SubscriptionPurchase[]
 }
 
 model Problem {
@@ -251,6 +252,8 @@ model SubscriptionPlaylist {
   createdByRole String @default("USER") // NEW field: who created this playlist (ADMIN or USER)
 
   @@unique([name, userId])
+
+  SubscriptionPurchase SubscriptionPurchase[]
 }
 
 model ProblemInSubscriptionPlaylist {
@@ -265,4 +268,23 @@ model ProblemInSubscriptionPlaylist {
   problem  SubscriptionProblem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([playlistId, problemId])
+}
+
+model SubscriptionPurchase {
+  id String @id @default(uuid())
+  userId        String
+  playlistId    String
+  razorpayOrderId   String
+  razorpayPaymentId String?
+  status        String   @default("PENDING") // PENDING | SUCCESS | FAILED
+  amount        Int
+  currency      String   @default("INR")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+    user     User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playlist SubscriptionPlaylist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playlistId]) // one user can buy a playlist only once
 }

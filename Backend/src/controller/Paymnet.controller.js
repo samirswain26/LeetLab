@@ -1,4 +1,5 @@
 import { PaymentInstance } from "../Libs/paymentGateway.js";
+import crypto from "crypto";
 import { db } from "../Libs/db.js";
 
 export const TrialPayment = async (req, res) => {
@@ -102,5 +103,52 @@ export const createOrder = async (req, res) => {
   } catch (error) {
     console.error("Error creating Razorpay order:", error);
     res.status(500).json({ success: false, error: "Order creation failed" });
+  }
+};
+
+export const verifyPayment = async (req, res) => {
+  try {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      playlistId,
+    } = req.body;
+
+    const sign = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSign = crypto
+      .createHash("sha256", process.env.Payment_key_Secret)
+      .update(sign.toString())
+      .digest("hex");
+
+    if (razorpay_signature !== expectedSign) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid payment signature" });
+    }
+
+    await db.SubscriptionPurchase.updateMany({
+      where: {
+        razorpayOrderId: razorpay_order_id,
+        playlistId,
+        userId: req.user.id,
+      },
+      data: {
+        status: "SUCCESS",
+        razorpayPaymentId: razorpay_payment_id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Payment verified and subscription activated",
+    });
+  } catch (error) {
+    console.error("Error in verify the payment : ", error)
+    res.status(500).json({
+      success: fasle,
+      error:" Verification failed" 
+    })
   }
 };

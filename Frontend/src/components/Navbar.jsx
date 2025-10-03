@@ -82,7 +82,7 @@ export const Navbar = () => {
                     className="hover:bg-primary hover:text-white text-base font-semibold"
                   >
                     <Code className="w-4 h-4 mr-1" />
-                    Add Subscription Model
+                    Add Subscription Playlist
                   </Link>
                 </li>
               )}

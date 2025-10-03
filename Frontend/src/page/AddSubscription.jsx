@@ -2,7 +2,11 @@ import React from 'react'
 
 const AddSubscription = () => {
   return (
-    <div>AddSubscription</div>
+    <div>
+      <h2>
+        Hello coders
+      </h2>
+    </div>
   )
 }
 

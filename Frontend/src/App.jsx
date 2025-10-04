@@ -15,8 +15,9 @@ import ProfilePage from "./page/ProfilePage.jsx";
 import ProblemsPage from "./page/ProblemsPage.jsx";
 import PlayListDetails from "./page/PlayListDetails.jsx";
 import SolvedProblemPage from "./page/SolvedProblemPage.jsx";
-import AddSubscription from "./page/AddSubscription.jsx";
 import SubscriptionModelPage from "./page/SubscriptionModelPage.jsx";
+import AddSubscriptionProblem from "./page/AddSubscriptionProblem.jsx";
+import SubscriptionProblemList from "./page/SubscriptionProblemList.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
@@ -75,7 +76,7 @@ const App = () => {
           element={authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />}
         />
         <Route
-          path="/subscription-Model"
+          path="/Subscriptions-problem"
           element={authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />}
         />
         <Route element={<AdminRoute />}>
@@ -84,9 +85,14 @@ const App = () => {
             element={authUser ? <AddProblem /> : <Navigate to={"/"} />}
           />
           <Route
-            path="/add-Subscriptions"
-            element={authUser ? <AddSubscription /> : <Navigate to={"/"} />}
+            path="/add-Subscriptions-problem"
+            element={authUser ? <AddSubscriptionProblem /> : <Navigate to={"/"} />}
           />
+          <Route
+            path="/get-Subscription-problems"
+            element={authUser ? <SubscriptionProblemList /> : <Navigate to={"/"} />}
+          />
+        
 
         </Route>
       </Routes>

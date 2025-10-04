@@ -2,7 +2,9 @@ import React from 'react'
 
 const SubscriptionModelPage = () => {
   return (
-    <div>SubscriptionModelPage</div>
+    <div>
+      All Playlist should be here for buying......
+    </div>
   )
 }
 

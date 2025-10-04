@@ -51,4 +51,20 @@ export const useProblemStore = create((set) => ({
       toast(res.data.message || "Error in getting solved problem by the user");
     }
   },
+  getAllPremiumProblems: async() => {
+        try {
+        set({ isProblemsLoading: true });
+  
+        const res = await axiosInstance.get("/subscription-problems/get-all-problems");
+        console.log("Get all problem data is : ", res);
+        set({ problems: res.data.problems });
+  
+      } catch (error) {
+        console.log("Error getting all problems", error);
+        toast.error("Error in getting problems");
+      } finally {
+        set({ isProblemsLoading: false });
+      }
+  }
+
 }));

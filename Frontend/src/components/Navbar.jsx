@@ -78,11 +78,22 @@ export const Navbar = () => {
               {authUser?.role === "ADMIN" && (
                 <li>
                   <Link
-                    to="/add-Subscriptions"
+                    to="/add-Subscriptions-problem"
                     className="hover:bg-primary hover:text-white text-base font-semibold"
                   >
                     <Code className="w-4 h-4 mr-1" />
-                    Add Subscription Playlist
+                    Add Subscription Problem
+                  </Link>
+                </li>
+              )}
+              {authUser?.role === "ADMIN" && (
+                <li>
+                  <Link
+                    to="/get-Subscription-problems"
+                    className="hover:bg-primary hover:text-white text-base font-semibold"
+                  >
+                    <Code className="w-4 h-4 mr-1" />
+                    Get Subscription Problem
                   </Link>
                 </li>
               )}

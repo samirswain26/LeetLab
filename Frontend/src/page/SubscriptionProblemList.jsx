@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useProblemStore } from "../store/useProblemStore";
 import { Loader } from "lucide-react";
 import PremiumProblems from "../components/PremiumProblems";
+import { useProblemStore } from "../store/useSubscriptionProblemStore.js";
 
 const SubscriptionProblemList = () => {
   const { getAllPremiumProblems, problems, isProblemsLoading } =

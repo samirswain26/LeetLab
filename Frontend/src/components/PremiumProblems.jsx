@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { useAction } from "../store/useAction.js";
-import { UsePlayListStore } from "../store/subscriptionPlaylistStore.jsx";
+import { UsePlayListStore } from "../store/subscriptionPlaylistStore.js";
 import AddToPlayList from "./AddToSubscriptionPlayList.jsx";
 import CreatePlayListModal from "./createPlaylistModal.jsx";
 

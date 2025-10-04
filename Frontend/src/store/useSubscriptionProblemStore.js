@@ -9,14 +9,15 @@ export const useProblemStore = create((set) => ({
   isProblemsLoading: false,
   isProblemLoading: false,
 
-  getAllProblems: async () => {
+  getAllPremiumProblems: async () => {
     try {
       set({ isProblemsLoading: true });
 
-      const res = await axiosInstance.get("/problems/get-all-problems");
+      const res = await axiosInstance.get(
+        "/subscription-problems/get-all-problems"
+      );
       console.log("Get all problem data is : ", res);
       set({ problems: res.data.problems });
-
     } catch (error) {
       console.log("Error getting all problems", error);
       toast.error("Error in getting problems");
@@ -29,8 +30,10 @@ export const useProblemStore = create((set) => ({
     try {
       set({ isProblemLoading: true });
 
-      const res = await axiosInstance.get(`/problems/get-problem/${id}`);
-      console.log("Received Id is : ", res.data.problem.id)
+      const res = await axiosInstance.get(
+        `/subscription-problems/get-problem/${id}`
+      );
+      console.log("Received Id is : ", res.data.problem.id);
 
       set({ problem: res.data.problem });
       toast.success(res.data.message);
@@ -44,12 +47,13 @@ export const useProblemStore = create((set) => ({
 
   getSolvedProblemByUser: async () => {
     try {
-      const res = await axiosInstance.get("/problems/get-solved-problems");
+      const res = await axiosInstance.get(
+        "/subscription-problems/get-solved-problems"
+      );
       set({ solvedProblems: res.data.problems });
     } catch (error) {
       console.log("Error in getting solved problem by the user:", error);
       toast(res.data.message || "Error in getting solved problem by the user");
     }
   },
- 
 }));

@@ -76,7 +76,7 @@ const App = () => {
           element={authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />}
         />
         <Route
-          path="/Subscriptions-problem"
+          path="/subscription-Model"
           element={authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />}
         />
         <Route element={<AdminRoute />}>

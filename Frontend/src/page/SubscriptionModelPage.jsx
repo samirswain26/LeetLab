@@ -1,9 +1,40 @@
-import React from 'react'
+import React from "react";
+import { useEffect } from "react";
+import { UsePlayListStore } from "../store/subscriptionPlaylistStore";
+import { Loader } from "lucide-react";
+import PremiumProblems from "../components/PremiumProblems";
+import PremiumPlaylist from "../components/premiumPlaylist";
 
 const SubscriptionModelPage = () => {
-  return (
-      <h1>a</h1>
-  )
-}
+  const { playLists, isLoading, getAllPlayLists } = UsePlayListStore();
 
-export default SubscriptionModelPage
+  useEffect(() => {
+    getAllPlayLists();
+  }, [getAllPlayLists]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animated-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center mt-10 px-4">
+      <div className="absolute top-16 left-0 h-1/3 w-1/3 bg-primary opacity-30 blur-3xl rounded-md button-9"></div>
+      <h1 className="text-4xl font-extrabold z-10 text-center">
+        Buy And Get  <span className="text-primary"> Your Own Playlist</span>
+      </h1>
+      {playLists.length > 0 ? 
+      (< PremiumPlaylist playLists={playLists} /> )
+      : (
+        <p className="mt-10 text-center text-lg font-semibold text-gray-500 dark:text-gray-400 z-10 border border-primary px-4 py-2 rounded-md border-dashed">
+          No problems found
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default SubscriptionModelPage;

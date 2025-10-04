@@ -27,7 +27,7 @@ const PremiumProblems = ({problems}) => {
     useState(false);
   const [selectedProblemId, setSelectedProblemId] = useState(null)
 
-  const { isDeletingProblem, delteProblem } = useAction();
+  const { isDeletingProblem, delteSubscriptionProblem } = useAction();
 
   const { createPlaylist } = UsePlayListStore();
 
@@ -70,7 +70,7 @@ const PremiumProblems = ({problems}) => {
   }, [filteredProblems, currentPage]);
 
   const handleDelete = (id) => {
-    delteProblem(id);
+    delteSubscriptionProblem(id);
   };
 
   const handleAddToPlaylist = (problemId) => {

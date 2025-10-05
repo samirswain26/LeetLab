@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { UsePlayListStore } from "../store/subscriptionPlaylistStore";
 import { Link } from "react-router-dom";
+import { handleBuy } from "../store/purchase.store";
+
 import {
   Search,
   ShoppingCart,
@@ -9,6 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Package,
+  Loader2,
+  TrashIcon,
 } from "lucide-react";
 
 const PremiumPlaylist = ({ playLists }) => {
@@ -16,6 +21,8 @@ const PremiumPlaylist = ({ playLists }) => {
 
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { isLoading, deletePlayList } = UsePlayListStore();
 
   // Filter the data according to the data coming from the backend
   const filteredProblems = useMemo(() => {
@@ -33,6 +40,12 @@ const PremiumPlaylist = ({ playLists }) => {
       currentPage * itemsPerPage
     );
   }, [filteredProblems, currentPage]);
+
+  const handleDelete = (id) => {
+    deletePlayList(id);
+  };
+
+  const isAdmin = authUser?.role === "ADMIN";
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10 px-4">
@@ -52,7 +65,6 @@ const PremiumPlaylist = ({ playLists }) => {
       {/* Search Bar */}
       <div className="mb-10 w-5xl">
         <div className="relative">
-          {/* <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-base-content/50" /> */}
           <input
             type="text"
             placeholder="Search playlists by title..."
@@ -88,16 +100,15 @@ const PremiumPlaylist = ({ playLists }) => {
                   </div>
                 </th>
                 <th>Description</th>
+                <th className="w-32 text-center">Price</th>
+                {isAdmin && <th className="w-32 text-center">Delete</th>}
                 <th className="w-32 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               {paginatedProblems.length > 0 ? (
                 paginatedProblems.map((playLists) => {
-                  // const isBuyed = playLists.solvedBy?.some(
-                  //   (user) => user.userId == authUser?.id
-                  // );
-                  const isBuyed = false; // Replace with actual logic
+                  const isBuyed = false; // Will be replaced
 
                   return (
                     <tr key={playLists.id} className="hover">
@@ -125,6 +136,28 @@ const PremiumPlaylist = ({ playLists }) => {
                         </p>
                       </td>
                       <td>
+                        <p className="text-base-content/80 line-clamp-2">
+                          ₹499
+                        </p>
+                      </td>
+                      {isAdmin && (
+                        <td>
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => handleDelete(playLists.id)}
+                              className="btn btn-sm btn-error gap-2"
+                              disabled={isLoading}
+                            >
+                              {isLoading ? (
+                                <Loader2 className="animate-spin h-4 w-4" />
+                              ) : (
+                                <TrashIcon className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                      <td>
                         <div className="flex justify-center">
                           {isBuyed ? (
                             <button className="btn btn-sm btn-success btn-disabled gap-2">
@@ -132,7 +165,10 @@ const PremiumPlaylist = ({ playLists }) => {
                               Owned
                             </button>
                           ) : (
-                            <button className="btn btn-sm btn-primary gap-2 hover:scale-105 transition-transform">
+                            <button
+                              className="btn btn-sm btn-primary gap-2 hover:scale-105 transition-transform"
+                              onClick={() => handleBuy(playLists)}
+                            >
                               <ShoppingCart className="w-4 h-4" />
                               Buy
                             </button>
@@ -144,7 +180,7 @@ const PremiumPlaylist = ({ playLists }) => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={4} className="text-center py-12">
+                  <td colSpan={isAdmin ? 5 : 4} className="text-center py-12">
                     <div className="flex flex-col items-center gap-3">
                       <Package className="w-12 h-12 text-base-content/30" />
                       <p className="text-base-content/60 font-medium">

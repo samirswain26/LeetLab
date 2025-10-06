@@ -1,5 +1,6 @@
 import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
+import { create } from "zustand";
 
 export const handleBuy = async (playlist) => {
   try {
@@ -35,15 +36,12 @@ export const handleBuy = async (playlist) => {
       handler: async function (response) {
         try {
           // Verify payment
-          const verifyRes = await axiosInstance.post(
-            "/payment/Verify-Order",
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              playlistId: playlist.id,
-            }
-          );
+          const verifyRes = await axiosInstance.post("/payment/Verify-Order", {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            playlistId: playlist.id,
+          });
 
           console.log("✅ Verification response:", verifyRes.data);
 
@@ -58,14 +56,14 @@ export const handleBuy = async (playlist) => {
           }
         } catch (error) {
           console.error("Error verifying payment:", error);
-          console.error("❌ Error response:", error.response?.data);
-          console.error("❌ Error status:", error.response?.status);
+          console.error("Error response:", error.response?.data);
+          console.error("Error status:", error.response?.status);
           toast.error("Payment verification failed!");
         }
       },
       prefill: {
-        name: "", // You can add user name here
-        email: "", // You can add user email here
+        name: "", // can add user name here but not necessary
+        email: "", //can add user email here but not necessary
       },
       theme: {
         color: "#0E7490",
@@ -78,7 +76,7 @@ export const handleBuy = async (playlist) => {
 
     // Handle payment modal close
     razorpay.on("payment.failed", function (response) {
-      console.error("❌ Payment failed:", response.error);
+      console.error(" Payment failed:", response.error);
       toast.error("Payment failed: " + response.error.description);
     });
   } catch (error) {
@@ -86,3 +84,35 @@ export const handleBuy = async (playlist) => {
     toast.error("Payment initialization failed!");
   }
 };
+
+export const fetchPurchase = create((set, get) => ({
+  isPurchaseLoading: false,
+  purchasedPlaylists: new Set(),
+
+  fetchPurchaseDetails: async () => {
+    try {
+      set({ isPurchaseLoading: true });
+      const res = await axiosInstance.get("/payment/user-purchases");
+      console.log("Response in the purchase lists are : ", res.data);
+
+      const playlists =
+        res.data.PurchasePlaylists || res.data.purchasedPlaylists || [];
+
+      if (res.data.success && Array.isArray(playlists)) {
+        set({ purchasedPlaylists: new Set(playlists) });
+      }
+    } catch (error) {
+      console.error("Error fetching purchases:", error);
+      set({ purchasedPlaylists: new Set() });
+    } finally {
+      set({ isPurchaseLoading: false });
+    }
+  },
+
+  addPurchasedPlaylist: (playlistId) => {
+    const { purchasedPlaylists } = get();
+    const update = new Set(purchasedPlaylists);
+    update.add(playlistId);
+    set({ purchasedPlaylists: update });
+  },
+}));

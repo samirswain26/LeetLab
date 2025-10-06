@@ -2,35 +2,6 @@ import { PaymentInstance } from "../Libs/paymentGateway.js";
 import crypto from "crypto";
 import { db } from "../Libs/db.js";
 
-export const TrialPayment = async (req, res) => {
-  try {
-    // const amount = req.body.amount*100
-    const amount = req.body.amount * 100;
-    console.log("amount is : ", amount);
-    console.log("amount is : ", amount);
-    const options = {
-      //   amount : Number(req.body.amount*100)  , // Razorpay expects amount in paise (so 100 INR = 10000)
-      amount: Number(amount), // Razorpay expects amount in paise (so 100 INR = 10000)
-      currency: "INR",
-    };
-
-    console.log("Payment key_id : ", PaymentInstance.key_id);
-    const Order = await PaymentInstance.orders.create(options);
-
-    res.status(200).json({
-      message: "Hello",
-      success: true,
-      Order,
-    });
-  } catch (error) {
-    console.log("Error in payment is : ", error);
-    res.status(400).json({
-      error: `Code fat gaya`,
-      error,
-    });
-  }
-};
-
 export const createOrder = async (req, res) => {
   try {
     const { playlistId, amount } = req.body;
@@ -217,6 +188,43 @@ export const verifyPayment = async (req, res) => {
     res.status(500).json({
       success: fasle,
       error: " Verification failed",
+    });
+  }
+};
+
+export const getPurchaseUser = async (req, res) => {
+  try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: fasle,
+        message: "Unauthorized",
+      });
+    }
+
+    const purchase = await db.SubscriptionPurchase.findMany({
+      where: {
+        userId: req.user.id,
+        // status: "SUCCESS",
+      },
+      select: {
+        playlistId: true,
+      },
+    });
+
+    console.log("Purchase is : ", purchase)
+
+    const PurchasePlaylist = purchase.map((p) => p.playlistId);
+    console.log("PlaylistId in purchase list is : ", PurchasePlaylist);
+
+    res.status(200).json({
+      success: true,
+      PurchasePlaylists: PurchasePlaylist,
+    });
+  } catch (error) {
+    console.error("Error fetching purchases:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch purchases",
     });
   }
 };

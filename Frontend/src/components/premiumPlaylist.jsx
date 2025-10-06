@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { UsePlayListStore } from "../store/subscriptionPlaylistStore";
 import { Link } from "react-router-dom";
-import { handleBuy } from "../store/purchase.store";
+import { handleBuy, fetchPurchase } from "../store/purchase.store";
 
 import {
   Search,
@@ -23,6 +23,18 @@ const PremiumPlaylist = ({ playLists }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { isLoading, deletePlayList } = UsePlayListStore();
+
+  const {
+    fetchPurchaseDetails,
+    isPurchaseLoading,
+    purchasedPlaylists,
+  } = fetchPurchase();
+
+  useEffect(() => {
+    if (authUser) {
+      fetchPurchaseDetails();
+    } 
+  }, [ authUser ,fetchPurchaseDetails]);
 
   // Filter the data according to the data coming from the backend
   const filteredProblems = useMemo(() => {
@@ -108,7 +120,7 @@ const PremiumPlaylist = ({ playLists }) => {
             <tbody>
               {paginatedProblems.length > 0 ? (
                 paginatedProblems.map((playLists) => {
-                  const isBuyed = false; // Will be replaced
+                  const isBuyed = purchasedPlaylists.has(playLists.id)
 
                   return (
                     <tr key={playLists.id} className="hover">

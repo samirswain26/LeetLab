@@ -24,12 +24,12 @@ import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
-  const { fetchPurchaseDetails, purchasedPlaylists } = fetchPurchase();
+  const { fetchPurchaseDetails } = fetchPurchase();
     useEffect(() => {
     if (authUser) {
       fetchPurchaseDetails();
     }
-  }, [authUser, fetchPurchaseDetails,purchasedPlaylists]);
+  }, [authUser, fetchPurchaseDetails]);
 
   useEffect(() => {
     checkAuth();

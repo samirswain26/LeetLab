@@ -2,7 +2,6 @@ import React from "react";
 import { useEffect } from "react";
 import { UsePlayListStore } from "../store/subscriptionPlaylistStore";
 import { Loader } from "lucide-react";
-import PremiumProblems from "../components/PremiumProblems";
 import PremiumPlaylist from "../components/premiumPlaylist";
 
 const SubscriptionModelPage = () => {

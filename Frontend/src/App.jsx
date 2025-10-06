@@ -6,6 +6,8 @@ import HomePage from "./page/HomePage.jsx";
 import LoginPage from "./page/LoginPage.jsx";
 import SignUpPage from "./page/SignUpPage.jsx";
 import { useAuthStore } from "./store/useAuthStore.js";
+import { fetchPurchase } from "./store/purchase.store.js";
+
 import { Loader } from "lucide-react";
 import Layout from "./layout/layout.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
@@ -18,9 +20,16 @@ import SolvedProblemPage from "./page/SolvedProblemPage.jsx";
 import SubscriptionModelPage from "./page/SubscriptionModelPage.jsx";
 import AddSubscriptionProblem from "./page/AddSubscriptionProblem.jsx";
 import SubscriptionProblemList from "./page/SubscriptionProblemList.jsx";
+import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
+  const { fetchPurchaseDetails, purchasedPlaylists } = fetchPurchase();
+    useEffect(() => {
+    if (authUser) {
+      fetchPurchaseDetails();
+    }
+  }, [authUser, fetchPurchaseDetails,purchasedPlaylists]);
 
   useEffect(() => {
     checkAuth();
@@ -60,6 +69,10 @@ const App = () => {
           element={authUser ? <ProblemPage /> : <Navigate to={"/Login"} />}
         />
         <Route
+          path="/playlist/:id"
+          element={authUser&&fetchPurchaseDetails ? <SubscribedPlaylistPage /> : <Navigate to={"/"} />}
+        />
+        <Route
           path="/Play-List/:id"
           element={authUser ? <PlayListDetails /> : <Navigate to={"/Login"} />}
         />
@@ -73,11 +86,15 @@ const App = () => {
         />
         <Route
           path="/problems/:id"
-          element={authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />}
+          element={
+            authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />
+          }
         />
         <Route
           path="/subscription-Model"
-          element={authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />}
+          element={
+            authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />
+          }
         />
         <Route element={<AdminRoute />}>
           <Route
@@ -86,14 +103,16 @@ const App = () => {
           />
           <Route
             path="/add-Subscriptions-problem"
-            element={authUser ? <AddSubscriptionProblem /> : <Navigate to={"/"} />}
+            element={
+              authUser ? <AddSubscriptionProblem /> : <Navigate to={"/"} />
+            }
           />
           <Route
             path="/get-Subscription-problems"
-            element={authUser ? <SubscriptionProblemList /> : <Navigate to={"/"} />}
+            element={
+              authUser ? <SubscriptionProblemList /> : <Navigate to={"/"} />
+            }
           />
-        
-
         </Route>
       </Routes>
     </div>

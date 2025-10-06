@@ -24,17 +24,14 @@ const PremiumPlaylist = ({ playLists }) => {
 
   const { isLoading, deletePlayList } = UsePlayListStore();
 
-  const {
-    fetchPurchaseDetails,
-    isPurchaseLoading,
-    purchasedPlaylists,
-  } = fetchPurchase();
+  const { fetchPurchaseDetails, isPurchaseLoading, purchasedPlaylists } =
+    fetchPurchase();
 
   useEffect(() => {
     if (authUser) {
       fetchPurchaseDetails();
-    } 
-  }, [ authUser ,fetchPurchaseDetails]);
+    }
+  }, [authUser, fetchPurchaseDetails]);
 
   // Filter the data according to the data coming from the backend
   const filteredProblems = useMemo(() => {
@@ -120,7 +117,7 @@ const PremiumPlaylist = ({ playLists }) => {
             <tbody>
               {paginatedProblems.length > 0 ? (
                 paginatedProblems.map((playLists) => {
-                  const isBuyed = purchasedPlaylists.has(playLists.id)
+                  const isBuyed = purchasedPlaylists.has(playLists.id);
 
                   return (
                     <tr key={playLists.id} className="hover">
@@ -134,13 +131,23 @@ const PremiumPlaylist = ({ playLists }) => {
                         </div>
                       </td>
                       <td>
-                        <Link
-                          to={`/playlist/${playLists.id}`}
-                          className="font-semibold hover:text-primary transition-colors flex items-center gap-2 group"
-                        >
-                          <ListMusic className="w-4 h-4 text-primary/60 group-hover:text-primary transition-colors" />
-                          {playLists.name}
-                        </Link>
+                        {isBuyed ? (
+                          <Link
+                            to={`/playlist/${playLists.id}`}
+                            className="font-semibold hover:text-primary transition-colors flex items-center gap-2 group"
+                          >
+                            <ListMusic className="w-4 h-4 text-primary/60 group-hover:text-primary transition-colors" />
+                            {playLists.name}
+                          </Link>
+                        ) : (
+                          <div
+                            className="font-semibold text-base-content/60 flex items-center gap-2 cursor-not-allowed"
+                            title="Buy this playlist to access"
+                          >
+                            <ListMusic className="w-4 h-4 text-base-content/40" />
+                            {playLists.name}
+                          </div>
+                        )}
                       </td>
                       <td>
                         <p className="text-base-content/80 line-clamp-2">

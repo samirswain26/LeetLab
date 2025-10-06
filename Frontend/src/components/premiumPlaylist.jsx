@@ -109,7 +109,7 @@ const PremiumPlaylist = ({ playLists }) => {
                   </div>
                 </th>
                 <th>Description</th>
-                <th className="w-32 text-center">Price</th>
+                <th className="w-32 text-center flex items-center">Price</th>
                 {isAdmin && <th className="w-32 text-center">Delete</th>}
                 <th className="w-32 text-center">Action</th>
               </tr>

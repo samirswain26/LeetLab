@@ -69,7 +69,7 @@ const App = () => {
           element={authUser ? <ProblemPage /> : <Navigate to={"/Login"} />}
         />
         <Route
-          path="/playlist/:id"
+          path="/playlist/:playlistId"
           element={authUser&&fetchPurchaseDetails ? <SubscribedPlaylistPage /> : <Navigate to={"/"} />}
         />
         <Route

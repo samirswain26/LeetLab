@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import PremiumProblems from "../components/PremiumProblems";
+// This premium problem is for the admin...
 import { useProblemStore } from "../store/useSubscriptionProblemStore.js";
 
 const SubscriptionProblemList = () => {

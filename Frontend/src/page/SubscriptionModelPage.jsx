@@ -69,7 +69,7 @@ const SubscriptionModelPage = () => {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center pt-20 px-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center pt-20 px-16 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white overflow-hidden">
       {/* Soft glowing background (non-interactive) */}
       <div className="pointer-events-none absolute top-0 left-0 h-[250px] w-[250px] bg-indigo-600 opacity-25 blur-[120px] rounded-full"></div>
       <div className="pointer-events-none absolute bottom-0 right-0 h-[250px] w-[250px] bg-pink-500 opacity-20 blur-[140px] rounded-full"></div>

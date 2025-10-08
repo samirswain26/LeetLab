@@ -21,6 +21,7 @@ import SubscriptionModelPage from "./page/SubscriptionModelPage.jsx";
 import AddSubscriptionProblem from "./page/AddSubscriptionProblem.jsx";
 import SubscriptionProblemList from "./page/SubscriptionProblemList.jsx";
 import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
+import SubscribedPlaylistProblems from "./components/SubscribedPlaylistProblems.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
@@ -94,6 +95,12 @@ const App = () => {
           path="/subscription-Model"
           element={
             authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />
+          }
+        />
+        <Route
+          path="/Subscribed-playlist-problems"
+          element={
+            authUser ? <SubscribedPlaylistProblems /> : <Navigate to={"/Login"} />
           }
         />
         <Route element={<AdminRoute />}>

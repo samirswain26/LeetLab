@@ -38,27 +38,27 @@ const problemSchema = z.object({
     JAVASCRIPT: z.object({
       input: z.string().min(1, "Input is required"),
       output: z.string().min(1, "Output is required"),
-      explaination: z.string().optional(),
+      explanation: z.string().optional(),
     }),
     PYTHON: z.object({
       input: z.string().min(1, "Input is required"),
       output: z.string().min(1, "Output is required"),
-      explaination: z.string().optional(),
+      explanation: z.string().optional(),
     }),
     JAVA: z.object({
       input: z.string().min(1, "Input is required"),
       output: z.string().min(1, "Output is required"),
-      explaination: z.string().optional(),
+      explanation: z.string().optional(),
     }),
     RUBY: z.object({
       input: z.string().min(1, "Input is required"),
       output: z.string().min(1, "Output is required"),
-      explaination: z.string().optional(),
+      explanation: z.string().optional(),
     }),
     RUST: z.object({
       input: z.string().min(1, "Input is required"),
       output: z.string().min(1, "Output is required"),
-      explaination: z.string().optional(),
+      explanation: z.string().optional(),
     }),
   }),
   codeSnippets: z.object({
@@ -76,7 +76,6 @@ const problemSchema = z.object({
     RUST: z.string().min(1, "RUST solution is required"),
   }),
 });
-
 
 const sampledData = {
   title: "Climbing Stairs",
@@ -1030,161 +1029,165 @@ const AddSubscriptionProblem = () => {
 
             {/* code editor section */}
             <div className="space-y-8">
-              {["JAVASCRIPT", "PYTHON", "JAVA","RUBY", "RUST"].map((language) => (
-                <div
-                  key={language}
-                  className="card bg-base-200 p-4 md:p-6 shadow-md"
-                >
-                  <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
-                    <Code2 className="w-5 h-5" />
-                    {language}
-                  </h3>
+              {["JAVASCRIPT", "PYTHON", "JAVA", "RUBY", "RUST"].map(
+                (language) => (
+                  <div
+                    key={language}
+                    className="card bg-base-200 p-4 md:p-6 shadow-md"
+                  >
+                    <h3 className="text-lg md:text-xl font-semibold mb-6 flex items-center gap-2">
+                      <Code2 className="w-5 h-5" />
+                      {language}
+                    </h3>
 
-                  <div className="space-y-6">
-                    {/* Starter code*/}
-                    <div className="card bg-base-100 shadow-md">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4">
-                          Starter Code Template
-                        </h4>
-                        <div className="border rounded-md overflow-hidden">
-                          <Controller
-                            name={`codeSnippets.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                Language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onChange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.codeSnippets?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-error text-sm">
-                              {errors.codeSnippets[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Reference Solution */}
-                    <div className="card bg-base-100 shadow">
-                      <div className="card -body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-success" />
-                          Reference Solution
-                        </h4>
-                        <div className="border rounded-md overflow-hidden">
-                          <Controller
-                            name={`referenceSolutions.${language}`}
-                            control={control}
-                            render={({ field }) => (
-                              <Editor
-                                height="300px"
-                                language={language.toLowerCase()}
-                                theme="vs-dark"
-                                value={field.value}
-                                onchange={field.onChange}
-                                options={{
-                                  minimap: { enabled: false },
-                                  fontSize: 14,
-                                  lineNumbers: "on",
-                                  roundedSelection: false,
-                                  scrollBeyondLastLine: false,
-                                  automaticLayout: true,
-                                }}
-                              />
-                            )}
-                          />
-                        </div>
-                        {errors.referenceSolutions?.[language] && (
-                          <div className="mt-2">
-                            <span className="text-error text-sm">
-                              {errors.referenceSolutions[language].message}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Examples */}
-                    <div className="card bg-base-100 shadow-md">
-                      <div className="card-body p-4 md:p-6">
-                        <h4 className="font-semibold text-base md:text-lg mb-4">
-                          Example
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                {" "}
-                                Input{" "}
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
-                              {...register(`examples.${language}.input`)}
-                              placeholder="Example input"
+                    <div className="space-y-6">
+                      {/* Starter code*/}
+                      <div className="card bg-base-100 shadow-md">
+                        <div className="card-body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4">
+                            Starter Code Template
+                          </h4>
+                          <div className="border rounded-md overflow-hidden">
+                            <Controller
+                              name={`codeSnippets.${language}`}
+                              control={control}
+                              render={({ field }) => (
+                                <Editor
+                                  height="300px"
+                                  Language={language.toLowerCase()}
+                                  theme="vs-dark"
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={{
+                                    minimap: { enabled: false },
+                                    fontSize: 14,
+                                    lineNumbers: "on",
+                                    roundedSelection: false,
+                                    scrollBeyondLastLine: false,
+                                    automaticLayout: true,
+                                  }}
+                                />
+                              )}
                             />
-                            {errors.examples?.[language]?.input && (
+                          </div>
+                          {errors.codeSnippets?.[language] && (
+                            <div className="mt-2">
+                              <span className="text-error text-sm">
+                                {errors.codeSnippets[language].message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Reference Solution */}
+                      <div className="card bg-base-100 shadow">
+                        <div className="card -body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4 flex items-center gap-2">
+                            <CheckCircle2 className="w-5 h-5 text-success" />
+                            Reference Solution
+                          </h4>
+                          <div className="border rounded-md overflow-hidden">
+                            <Controller
+                              name={`referenceSolutions.${language}`}
+                              control={control}
+                              render={({ field }) => (
+                                <Editor
+                                  height="300px"
+                                  language={language.toLowerCase()}
+                                  theme="vs-dark"
+                                  value={field.value}
+                                  onchange={field.onChange}
+                                  options={{
+                                    minimap: { enabled: false },
+                                    fontSize: 14,
+                                    lineNumbers: "on",
+                                    roundedSelection: false,
+                                    scrollBeyondLastLine: false,
+                                    automaticLayout: true,
+                                  }}
+                                />
+                              )}
+                            />
+                          </div>
+                          {errors.referenceSolutions?.[language] && (
+                            <div className="mt-2">
+                              <span className="text-error text-sm">
+                                {errors.referenceSolutions[language].message}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Examples */}
+                      <div className="card bg-base-100 shadow-md">
+                        <div className="card-body p-4 md:p-6">
+                          <h4 className="font-semibold text-base md:text-lg mb-4">
+                            Example
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            <div className="form-control">
                               <label className="label">
-                                <span className="label-text-alt text-error">
-                                  {errors.examples[language].input.message}
+                                <span className="label-text font-medium">
+                                  {" "}
+                                  Input{" "}
                                 </span>
                               </label>
-                            )}
-                          </div>
-                          <div className="form-control">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                {" "}
-                                Output{" "}
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
-                              {...register(`wxamples.${language}.output`)}
-                              placeholder="Example Output"
-                            />
-                            {errors.examples?.[language]?.output && (
+                              <textarea
+                                className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
+                                {...register(`examples.${language}.input`)}
+                                placeholder="Example input"
+                              />
+                              {errors.examples?.[language]?.input && (
+                                <label className="label">
+                                  <span className="label-text-alt text-error">
+                                    {errors.examples[language].input.message}
+                                  </span>
+                                </label>
+                              )}
+                            </div>
+                            <div className="form-control">
                               <label className="label">
-                                <span className="label-text-alt text-error">
-                                  {errors.examples[language].output.message}
+                                <span className="label-text font-medium">
+                                  {" "}
+                                  Output{" "}
                                 </span>
                               </label>
-                            )}
-                          </div>
-                          <div className="form-control md:col-span-2">
-                            <label className="label">
-                              <span className="label-text font-medium">
-                                Explanation
-                              </span>
-                            </label>
-                            <textarea
-                              className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
-                              {...register(`examples.${language}.explanation`)}
-                              placeholder="Expalin the example"
-                            />
+                              <textarea
+                                className="textarea textarea-bordered min-h-20 w-full p-3 resize-y"
+                                {...register(`wxamples.${language}.output`)}
+                                placeholder="Example Output"
+                              />
+                              {errors.examples?.[language]?.output && (
+                                <label className="label">
+                                  <span className="label-text-alt text-error">
+                                    {errors.examples[language].output.message}
+                                  </span>
+                                </label>
+                              )}
+                            </div>
+                            <div className="form-control md:col-span-2">
+                              <label className="label">
+                                <span className="label-text font-medium">
+                                  Explanation
+                                </span>
+                              </label>
+                              <textarea
+                                className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"
+                                {...register(
+                                  `examples.${language}.explanation`
+                                )}
+                                placeholder="Expalin the example"
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
 
             {/* Additional info */}
@@ -1213,9 +1216,7 @@ const AddSubscriptionProblem = () => {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font font-medium">
-                      Hints 
-                    </span>
+                    <span className="label-text font font-medium">Hints</span>
                   </label>
                   <textarea
                     className="textarea textarea-bordered min-h-24 w-full p-3 resize-y"

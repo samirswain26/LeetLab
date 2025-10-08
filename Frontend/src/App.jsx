@@ -22,11 +22,12 @@ import AddSubscriptionProblem from "./page/AddSubscriptionProblem.jsx";
 import SubscriptionProblemList from "./page/SubscriptionProblemList.jsx";
 import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
 import SubscribedPlaylistProblems from "./components/SubscribedPlaylistProblems.jsx";
+import SubscribedProblemPage from "./page/subscribedProblemPage.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
   const { fetchPurchaseDetails } = fetchPurchase();
-    useEffect(() => {
+  useEffect(() => {
     if (authUser) {
       fetchPurchaseDetails();
     }
@@ -71,7 +72,13 @@ const App = () => {
         />
         <Route
           path="/playlist/:playlistId"
-          element={authUser&&fetchPurchaseDetails ? <SubscribedPlaylistPage /> : <Navigate to={"/"} />}
+          element={
+            authUser && fetchPurchaseDetails ? (
+              <SubscribedPlaylistPage />
+            ) : (
+              <Navigate to={"/"} />
+            )
+          }
         />
         <Route
           path="/Play-List/:id"
@@ -92,6 +99,10 @@ const App = () => {
           }
         />
         <Route
+          path="/SubscriptionProblem/:id"
+          element={authUser ? <SubscribedProblemPage /> : <Navigate to={"/"} />}
+        />
+        <Route
           path="/subscription-Model"
           element={
             authUser ? <SubscriptionModelPage /> : <Navigate to={"/Login"} />
@@ -100,7 +111,11 @@ const App = () => {
         <Route
           path="/Subscribed-playlist-problems"
           element={
-            authUser ? <SubscribedPlaylistProblems /> : <Navigate to={"/Login"} />
+            authUser ? (
+              <SubscribedPlaylistProblems />
+            ) : (
+              <Navigate to={"/Login"} />
+            )
           }
         />
         <Route element={<AdminRoute />}>

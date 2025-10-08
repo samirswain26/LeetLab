@@ -72,19 +72,26 @@ const PremiumPlaylist = ({ playLists }) => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-10 w-5xl">
+      <div className="relative mb-10 w-full max-w-2xl mx-auto">
         <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
             placeholder="Search playlists by title..."
-            className="input input-bordered w-full pl-12 bg-base-200 focus:outline-none focus:border-primary transition-all"
+            className="w-full bg-slate-800/50 text-gray-200 placeholder-gray-500 border border-slate-700 rounded-xl pl-12 pr-4 py-3 
+                       focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-400 transition-all duration-200"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+
         {search && (
-          <p className="text-sm text-base-content/60 mt-2">
-            Found {filteredProblems.length} playlist
+          <p className="text-sm text-gray-400 mt-2 text-center">
+            Found{" "}
+            <span className="text-indigo-400 font-semibold">
+              {filteredProblems.length}
+            </span>{" "}
+            playlist
             {filteredProblems.length !== 1 ? "s" : ""}
           </p>
         )}

@@ -197,7 +197,7 @@ const SubscribedPlaylistProblems = ({ playlistId }) => {
                       </td>
                       <td>
                         <Link
-                          to={`/problem/${problem.id}`}
+                          to={`/SubscriptionProblem/${problem.id}`}
                           className="font-semibold hover:text-primary transition-colors flex items-center gap-2 group"
                         >
                           <Package className="w-4 h-4 text-primary/60 group-hover:text-primary transition-colors" />

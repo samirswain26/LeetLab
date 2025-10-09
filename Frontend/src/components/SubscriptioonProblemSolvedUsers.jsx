@@ -95,7 +95,7 @@ const ProblemSolvedByPremiumUser = () => {
                       <td className="text-center">
                         <div className="flex justify-center">
                           <Link
-                            to={`/problems/${problem.id}`}
+                            to={`/sub-problems-sol/${problem.id}`}
                             className="btn btn-sm btn-outline btn-primary"
                           >
                             <ExternalLink size={14} className="mr-1" />

@@ -23,6 +23,7 @@ import SubscriptionProblemList from "./page/SubscriptionProblemList.jsx";
 import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
 import SubscribedPlaylistProblems from "./components/SubscribedPlaylistProblems.jsx";
 import SubscribedProblemPage from "./page/subscribedProblemPage.jsx";
+import SolvedSubscribedProblemPage from "./page/SolvedSubscribedProblemPage.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
@@ -96,6 +97,12 @@ const App = () => {
           path="/problems/:id"
           element={
             authUser ? <SolvedProblemPage /> : <Navigate to={"/Login"} />
+          }
+        />
+        <Route
+          path="/sub-problems-sol/:id"
+          element={
+            authUser ? <SolvedSubscribedProblemPage /> : <Navigate to={"/Login"} />
           }
         />
         <Route

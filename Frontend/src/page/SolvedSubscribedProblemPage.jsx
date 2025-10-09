@@ -19,14 +19,13 @@ import {
   Snowflake,
 } from "lucide-react";
 
-import { useProblemStore } from "../store/useProblemStore.js";
-import { useExecutionStore } from "../store/useExecutionStore.js";
-import { getLanguageId } from "../libs/lang.js";
-import SubmissionResults from "../components/Submission.jsx";
-import SubmissionsList from "../components/SubmissionsList.jsx";
-import { useSubmissionStore } from "../store/useSubmissionStore.js";
-
-const SolvedProblemPage = () => {
+import { useProblemStore } from "../store/useSubscriptionProblemStore.js";
+import { useSubscriptionExecutionStore } from "../store/useExecutionStore.js";
+import { getSubscriptionLanguageId } from "../libs/lang.js";
+import SubmissionResults from "../components/SubscriptionSubmission.jsx";
+import SubmissionsList from "../components/SubscriptionSubmissionList.jsx";
+import { useSubscriptionSubmissionStore } from "../store/useSubmissionStore.js";
+const SolvedSubscribedProblemPage = () => {
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
@@ -38,7 +37,7 @@ const SolvedProblemPage = () => {
     getSubmissionForPeoblem,
     getSubmissionCountForProblem,
     submissionCount,
-  } = useSubmissionStore();
+  } = useSubscriptionSubmissionStore();
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -46,7 +45,7 @@ const SolvedProblemPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
-  const { executeCode, submission, isExecuting } = useExecutionStore();
+  const { executeCode, submission, isExecuting } = useSubscriptionExecutionStore();
 
   console.log("SubmissionTestcase is 1 :", typeof submissions);
 
@@ -168,7 +167,7 @@ const SolvedProblemPage = () => {
   const handleRunCode = (e) => {
     e.preventDefault();
     try {
-      const language_id = getLanguageId(selectedLanguage);
+      const language_id = getSubscriptionLanguageId(selectedLanguage);
       const stdin = problem.testcases.map((tc) => tc.input);
       const expected_outputs = problem.testcases.map((tc) => tc.output);
       executeCode(code, language_id, stdin, expected_outputs, id);
@@ -269,7 +268,7 @@ const SolvedProblemPage = () => {
                     </button>
                   </div>
 
-                  <div className="h-[600px] w-full">
+                  <div className="h-[1000px] w-full">
                     <Editor
                       height="100%"
                       language={selectedLanguage.toLowerCase()}
@@ -349,4 +348,4 @@ const SolvedProblemPage = () => {
   );
 };
 
-export default SolvedProblemPage;
+export default SolvedSubscribedProblemPage;

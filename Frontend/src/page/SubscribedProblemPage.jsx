@@ -15,17 +15,13 @@ import {
   Share2,
   Clock,
   ChevronRight,
-  BookOpen,
   Terminal,
   Code2,
   Users,
-  ThumbsUp,
   Home,
-  Snowflake,
 } from "lucide-react";
 import SubmissionResults from "../components/SubscriptionSubmission.jsx";
 import SubmissionsList from "../components/SubscriptionSubmissionList.jsx";
-// import SubmissionsList from "../components/SubmissionsList.jsx";  //It will be changed...
 
 const SubscribedProblemPage = () => {
   const { id } = useParams();
@@ -41,6 +37,8 @@ const SubscribedProblemPage = () => {
     getSubmissionCountForProblem,
     submissionCount,
   } = useSubscriptionSubmissionStore();
+
+  console.log("Submission nks submission is :", submissions)
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
@@ -413,3 +411,17 @@ const SubscribedProblemPage = () => {
 };
 
 export default SubscribedProblemPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

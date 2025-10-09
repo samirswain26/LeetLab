@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 const SubmissionsList = ({ submissions, isLoading }) => {
+  console.log("Response subscription is :", submissions)
   const safeParse = (data) => {
     try {
       return JSON.parse(data);

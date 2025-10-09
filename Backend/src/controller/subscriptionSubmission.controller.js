@@ -5,7 +5,7 @@ export const getAllSubmissions = async (req, res) => {
     const userId = req.user.id;
     const submission = await db.SubscriptionSubmission.findMany({
       where: {
-        userId: userId,
+        userId,
       },
     });
 
@@ -28,13 +28,13 @@ export const getAllSubmissions = async (req, res) => {
 };
 
 export const getSubmissionsForProblem = async (req, res) => {
-  const { problemId } = req.params.problemId;
-  const { userId } = req.user.id;
+  const problemId = req.params.problemId;
+  const userId = req.user.id;
   try {
     const submissions = await db.SubscriptionSubmission.findMany({
       where: {
-        userId: userId,
-        problemId: problemId,
+        userId,
+        problemId,
       },
     });
 

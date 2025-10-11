@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import Razorpay from "razorpay";
 
 // Routes
 import authRoutes from "./routes/auth.routes.js";
@@ -16,6 +15,8 @@ import SubscriptionSubmissionRoute from "./routes/subscriptionSubmission.routes.
 import SubscriptionPlaylist from "./routes/subscriptionPlaylist.routes.js";
 
 import Payment from "./routes/Payment.routes.js";
+
+import geminiRoutes from "./routes/GeminiApi.js";
 
 dotenv.config({ path: "./.env" });
 const app = express();
@@ -46,13 +47,17 @@ app.use("/api/v1/subscription-Playlist", SubscriptionPlaylist);
 
 app.use("/api/v1/payment", Payment);
 
+app.use("/api/v1/gemini", geminiRoutes);
+
+app.get("/", (req, res) => {
+  res.send("Gemini AI API is running...");
+});
+
 const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
   console.log(`App is listening on port : ${port}`);
 });
-
-
 
 const PaymentProcess = async (req, res) => {
   res.status(200).json({

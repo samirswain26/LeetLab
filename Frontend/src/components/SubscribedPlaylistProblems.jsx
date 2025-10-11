@@ -121,9 +121,9 @@ const SubscribedPlaylistProblems = ({ playlistId }) => {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto mt-10 px-4">
+    <div className="w-full max-w-6xl mx-auto mt-5 px-4 pb-5">
       {/* Header Section */}
-      <div className="mb-8">
+      <div className="mb-2">
         <div className="flex items-center gap-3 mb-2">
           <ListMusic className="w-8 h-8 text-primary" />
           <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -142,7 +142,7 @@ const SubscribedPlaylistProblems = ({ playlistId }) => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-10 w-full">
+      <div className="mb-2 w-full">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-base-content/40 w-5 h-5" />
           <input

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSubscriptionExecutionStore } from "../store/useExecutionStore";
 import { useProblemStore } from "../store/useSubscriptionProblemStore";
-import {  useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSubscriptionSubmissionStore } from "../store/useSubmissionStore.js";
 import { getSubscriptionLanguageId } from "../libs/lang";
 import Editor from "@monaco-editor/react";
@@ -26,7 +26,6 @@ import SubmissionResults from "../components/SubscriptionSubmission.jsx";
 import SubmissionsList from "../components/SubscriptionSubmissionList.jsx";
 
 import { ai } from "../store/ai.store.js";
-
 
 const AiAssistance = ({ isOpen, onClose, problem }) => {
   const [aiMessages, setAiMessages] = useState([]);
@@ -79,8 +78,7 @@ const AiAssistance = ({ isOpen, onClose, problem }) => {
           <div className="flex items-center gap-3">
             <Brain className="w-6 h-6 text-primary" />
             <div>
-              <h3 className="font-bold text-lg">AI Assistant</h3>
-              <p className="text-xs text-base-content/50">Powered by Gemini</p>
+              <h3 className="font-bold text-lg">Your AI Assistant</h3>
             </div>
           </div>
           <button onClick={onClose} className="btn btn-ghost btn-circle btn-sm">
@@ -111,8 +109,8 @@ const AiAssistance = ({ isOpen, onClose, problem }) => {
               >
                 {msg.role === "assistant" && (
                   <div className="chat-image avatar">
-                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                      <Brain className="w-6 h-6 text-primary-content" />
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                      <Brain className="w-6 h-6 text-primary-content mt-2 ml-2" />
                     </div>
                   </div>
                 )}
@@ -133,37 +131,51 @@ const AiAssistance = ({ isOpen, onClose, problem }) => {
 
           {isLoading && (
             <div className="chat chat-start">
-              <div className="chat-image avatar">
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center animate-pulse">
-                  <Brain className="w-6 h-6 text-primary-content" />
+              <div className="chat-image avatar ">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center animate-pulse flex-shrink-0">
+                  <Brain className="w-6 h-6 text-primary-content flex-shrink-0 mt-2 ml-2"/>
                 </div>
               </div>
               <div className="chat-bubble chat-bubble-secondary flex items-center gap-3 px-6 py-4">
-                <Loader className="w-5 h-5 animate-spin" />
+                <Loader className="w-5 h-5 animate-spin flex-shrink-0" />
                 <span>Thinking...</span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Input */}
+
+        {/* Input Area */}
         <div className="border-t border-base-300 p-6 bg-base-100">
-          <div className="flex gap-3">
-            <input
-              type="text"
+          <div className="flex gap-3 items-end">
+            <textarea
               placeholder="Ask for help..."
-              className="input input-bordered flex-1 bg-base-200 focus:outline-none focus:border-primary focus:bg-base-100"
+              className="textarea textarea-bordered flex-1 bg-base-200 focus:outline-none focus:border-primary focus:bg-base-100 resize-none overflow-hidden"
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => {
+                setPrompt(e.target.value);
+                // Auto-expand textarea
+                e.target.style.height = "auto";
+                e.target.style.height =
+                  Math.min(e.target.scrollHeight, 200) + "px";
+              }}
               onKeyPress={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) handleSendMessage(e);
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage(e);
+                }
               }}
               disabled={isLoading}
-              maxLength="500"
+              maxLength="5000"
+              rows="1"
+              style={{
+                minHeight: "44px",
+                maxHeight: "200px",
+              }}
             />
             <button
               onClick={handleSendMessage}
-              className="btn btn-primary gap-2"
+              className="btn btn-primary gap-2 h-11 px-4"
               disabled={isLoading || !prompt.trim()}
             >
               {isLoading ? (
@@ -174,7 +186,7 @@ const AiAssistance = ({ isOpen, onClose, problem }) => {
             </button>
           </div>
           <p className="text-xs text-base-content/50 mt-2 text-right">
-            {prompt.length}/500 characters
+            {prompt.length}/5000 characters
           </p>
         </div>
       </div>
@@ -184,7 +196,6 @@ const AiAssistance = ({ isOpen, onClose, problem }) => {
     </div>
   );
 };
-
 
 const SubscribedProblemPage = () => {
   const { id } = useParams();

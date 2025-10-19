@@ -25,6 +25,7 @@ import { getLanguageId } from "../libs/lang.js";
 import SubmissionResults from "../components/Submission.jsx";
 import SubmissionsList from "../components/SubmissionsList.jsx";
 import { useSubmissionStore } from "../store/useSubmissionStore.js";
+import toast from "react-hot-toast";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -204,6 +205,18 @@ const ProblemPage = () => {
       console.log("Error executing code", error);
     }
   };
+
+  const handleShare = () => {
+    const Url = window.location.href
+    try {
+      navigator.clipboard.writeText(Url)
+      toast.success("Link copied to clipboard!")
+    } catch (error) {
+      console.error("Failed to copy URL: ", error);
+      toast.error("Failed to copy theLink")
+    }
+  }
+
   console.log("Submission is : ", submissions);
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
@@ -246,7 +259,7 @@ const ProblemPage = () => {
               >
                 <Bookmark className="w-5 h-5" />
               </button>
-              <button className="btn btn-ghost btn-circle">
+              <button className="btn btn-ghost btn-circle" onClick={handleShare}>
                 <Share2 className="w-5 h-5" />
               </button>
               <select

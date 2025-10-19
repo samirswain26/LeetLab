@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Bookmark,
   PencilIcon,
@@ -17,6 +17,7 @@ import CreatePlayListModal from "./createPlaylistModal.jsx";
 
 const ProblemTable = ({ problems }) => {
   const { authUser } = useAuthStore();
+  const navigate = useNavigate()
 
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
@@ -80,6 +81,8 @@ const ProblemTable = ({ problems }) => {
 
   const handleEdit = async (id) => {
     console.log(id);
+    navigate(`/edit-problem/${id}`)
+    // <Link to={"/edit-problem"} />
   };
 
   const handleCreatePlayList = async (data) => {
@@ -209,7 +212,6 @@ const ProblemTable = ({ problems }) => {
                               )}
                             </button>
                             <button
-                              // disabled
                               onClick={() => handleEdit(problem.id)}
                               className="btn btn-sm btn-warning"
                             >

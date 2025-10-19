@@ -16,7 +16,6 @@ export const useProblemStore = create((set) => ({
       const res = await axiosInstance.get("/problems/get-all-problems");
       console.log("Get all problem data is : ", res);
       set({ problems: res.data.problems });
-
     } catch (error) {
       console.log("Error getting all problems", error);
       toast.error("Error in getting problems");
@@ -30,7 +29,7 @@ export const useProblemStore = create((set) => ({
       set({ isProblemLoading: true });
 
       const res = await axiosInstance.get(`/problems/get-problem/${id}`);
-      console.log("Received Id is : ", res.data.problem.id)
+      console.log("Received Id is : ", res.data.problem.id);
 
       set({ problem: res.data.problem });
       toast.success(res.data.message);
@@ -51,5 +50,4 @@ export const useProblemStore = create((set) => ({
       toast(res.data.message || "Error in getting solved problem by the user");
     }
   },
- 
 }));

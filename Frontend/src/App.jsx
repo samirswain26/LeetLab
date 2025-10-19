@@ -24,6 +24,7 @@ import SubscribedPlaylistPage from "./page/SubscribedPlaylistPage.jsx";
 import SubscribedPlaylistProblems from "./components/SubscribedPlaylistProblems.jsx";
 import SubscribedProblemPage from "./page/subscribedProblemPage.jsx";
 import SolvedSubscribedProblemPage from "./page/SolvedSubscribedProblemPage.jsx";
+import EditProblem from "./page/EditProblem.jsx";
 
 const App = () => {
   const { authUser, checkAuth, ischeckingAuth } = useAuthStore();
@@ -129,6 +130,10 @@ const App = () => {
           <Route
             path="/add-problem"
             element={authUser ? <AddProblem /> : <Navigate to={"/"} />}
+          />
+          <Route
+            path="/edit-problem/:id"
+            element={authUser ? <EditProblem /> : <Navigate to={"/"} />}
           />
           <Route
             path="/add-Subscriptions-problem"

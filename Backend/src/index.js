@@ -13,9 +13,8 @@ import SubscriptionProblemRoutes from "./routes/subscriptionProblem.routes.js";
 import SubscriptionexecutionRoute from "./routes/subscriptionExecuteCode.router.js";
 import SubscriptionSubmissionRoute from "./routes/subscriptionSubmission.routes.js";
 import SubscriptionPlaylist from "./routes/subscriptionPlaylist.routes.js";
-
+import BookMark from "./routes/bookMark.route.js";
 import Payment from "./routes/Payment.routes.js";
-
 import geminiRoutes from "./routes/GeminiApi.js";
 
 dotenv.config({ path: "./.env" });
@@ -39,6 +38,8 @@ app.use("/api/v1/problems", problemRoutes);
 app.use("/api/v1/execute-code", executionRoute);
 app.use("/api/v1/submission", submissionRoutes);
 app.use("/api/v1/Play-List", playlistRoutes);
+app.use("/api/v1/add",BookMark );
+
 // Subscription Endpoints
 app.use("/api/v1/subscription-problems", SubscriptionProblemRoutes);
 app.use("/api/v1/subscription-execute-code", SubscriptionexecutionRoute);
@@ -59,11 +60,3 @@ app.listen(port, () => {
   console.log(`App is listening on port : ${port}`);
 });
 
-const PaymentProcess = async (req, res) => {
-  res.status(200).json({
-    PaymentInstance,
-    success: true,
-  });
-};
-
-// app.post("/payment", PaymentProcess);

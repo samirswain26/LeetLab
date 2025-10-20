@@ -22,13 +22,14 @@ model User {
   submission    Submission[]
   problemSolved problemSolved[]
   playlist      Playlist[]
+  BookMarked    BookMarked[]
 
   // Subscription Models
   SubscriptionProblems    SubscriptionProblem[]
   SubscriptionSubmission  SubscriptionSubmission[]
   SubmissionProblemSolved SubscriptionproblemSolved[]
   SubscriptionPlaylist    SubscriptionPlaylist[]
-  SubscriptionPurchase  SubscriptionPurchase[]
+  SubscriptionPurchase    SubscriptionPurchase[]
 }
 
 model Problem {
@@ -52,6 +53,7 @@ model Problem {
   submission       Submission[]
   solvedBy         problemSolved[]
   problemPlaylists ProblemInPlaylist[]
+  BookMarked       BookMarked[]
 }
 
 enum UserRole {
@@ -110,6 +112,20 @@ model TestCaseResult {
 }
 
 model problemSolved {
+  id        String @id @default(uuid())
+  userId    String
+  problemId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, problemId])
+}
+
+model BookMarked {
   id        String @id @default(uuid())
   userId    String
   problemId String
@@ -251,9 +267,9 @@ model SubscriptionPlaylist {
 
   createdByRole String @default("USER") // NEW field: who created this playlist (ADMIN or USER)
 
-  @@unique([name, userId])
-
   SubscriptionPurchase SubscriptionPurchase[]
+
+  @@unique([name, userId])
 }
 
 model ProblemInSubscriptionPlaylist {
@@ -271,19 +287,19 @@ model ProblemInSubscriptionPlaylist {
 }
 
 model SubscriptionPurchase {
-  id String @id @default(uuid())
-  userId        String
-  playlistId    String
+  id                String  @id @default(uuid())
+  userId            String
+  playlistId        String
   razorpayOrderId   String
   razorpayPaymentId String?
-  status        String   @default("PENDING") // PENDING | SUCCESS | FAILED
-  amount        Int
-  currency      String   @default("INR")
+  status            String  @default("PENDING") // PENDING | SUCCESS | FAILED
+  amount            Int
+  currency          String  @default("INR")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-    user     User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   playlist SubscriptionPlaylist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
 
   @@unique([userId, playlistId]) // one user can buy a playlist only once

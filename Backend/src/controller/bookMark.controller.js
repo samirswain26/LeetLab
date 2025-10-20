@@ -82,7 +82,7 @@ export const getBookmarlList = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "BookMark list",
-      data: getBookMarkList,
+      Bookmark: getBookMarkList,
     });
   } catch (error) {
     console.log("error in get bookmark list : ", error);

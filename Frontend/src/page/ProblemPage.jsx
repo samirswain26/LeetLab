@@ -26,11 +26,13 @@ import SubmissionResults from "../components/Submission.jsx";
 import SubmissionsList from "../components/SubmissionsList.jsx";
 import { useSubmissionStore } from "../store/useSubmissionStore.js";
 import toast from "react-hot-toast";
+import { usebookMarkStore } from "../store/bookmark.js";
 
 const ProblemPage = () => {
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
+  const { addbooMark, bookmark, removeBookmark } = usebookMarkStore();
 
   const {
     submission: submissions,
@@ -48,6 +50,8 @@ const ProblemPage = () => {
   const [testcases, setTestCases] = useState([]);
 
   const { executeCode, submission, isExecuting } = useExecutionStore();
+
+  console.log("id is :", id);
 
   // const submissionCount = 10;
   useEffect(() => {
@@ -68,15 +72,11 @@ const ProblemPage = () => {
     }
   }, [problem, selectedLanguage]);
 
-  useEffect(()=>{
-    if(activeTab === "submissions" && id){
-      getSubmissionForPeoblem(id)
+  useEffect(() => {
+    if (activeTab === "submissions" && id) {
+      getSubmissionForPeoblem(id);
     }
-  },[activeTab,id])
-
-  console.log("Submissions :::", submissions)
-  // console.log("Hints is : ", problem.hints)
-
+  }, [activeTab, id]);
 
   const handleLanguageChange = (e) => {
     const language = e.target.value;
@@ -174,21 +174,21 @@ const ProblemPage = () => {
         // return (
         //   <div className="p-4 text-center text-base-content/70"> No Hints </div>
         // );
-      return (
-        <div className="p-4">
-          {problem?.hints ? (
-            <div className="bg-base-200 p-6 rounded-xl">
-              <span className="bg-black/90 px-4 py-1 rounded-lg font-semibold text-white text-lg">
-                {problem.hints}
-              </span>
-            </div>
-          ) : (
-            <div className="text-center text-base-content/70">
-              No hints available
-            </div>
-          )}
-        </div>
-      );
+        return (
+          <div className="p-4">
+            {problem?.hints ? (
+              <div className="bg-base-200 p-6 rounded-xl">
+                <span className="bg-black/90 px-4 py-1 rounded-lg font-semibold text-white text-lg">
+                  {problem.hints}
+                </span>
+              </div>
+            ) : (
+              <div className="text-center text-base-content/70">
+                No hints available
+              </div>
+            )}
+          </div>
+        );
       default:
         return null;
     }
@@ -207,15 +207,29 @@ const ProblemPage = () => {
   };
 
   const handleShare = () => {
-    const Url = window.location.href
+    const Url = window.location.href;
     try {
-      navigator.clipboard.writeText(Url)
-      toast.success("Link copied to clipboard!")
+      navigator.clipboard.writeText(Url);
+      toast.success("Link copied to clipboard!");
     } catch (error) {
       console.error("Failed to copy URL: ", error);
-      toast.error("Failed to copy theLink")
+      toast.error("Failed to copy theLink");
     }
-  }
+  };
+
+  const handleBookmarkToggle = async () => {
+    try {
+      if (isBookmarked) {
+        await removeBookmark(id);
+        setIsBookmarked(false);
+      } else {
+        await addbooMark(id);
+        setIsBookmarked(true);
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    }
+  };
 
   console.log("Submission is : ", submissions);
   return (
@@ -255,11 +269,17 @@ const ProblemPage = () => {
                 className={`btn btn-ghost btn-circle ${
                   isBookmarked ? "text-primary" : ""
                 }`}
-                onClick={() => setIsBookmarked(!isBookmarked)}
+                // onClick={() => setIsBookmarked(!isBookmarked)}
+
+                onClick={handleBookmarkToggle}
+                disabled={isLoading}
               >
                 <Bookmark className="w-5 h-5" />
               </button>
-              <button className="btn btn-ghost btn-circle" onClick={handleShare}>
+              <button
+                className="btn btn-ghost btn-circle"
+                onClick={handleShare}
+              >
                 <Share2 className="w-5 h-5" />
               </button>
               <select
@@ -348,7 +368,7 @@ const ProblemPage = () => {
                         readOnly: false,
                         automaticLayout: true,
                         // wordWrap: "on",
-                        formatOnType: true
+                        formatOnType: true,
                       }}
                     />
                   </div>

@@ -3,7 +3,7 @@ import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
 
 export const usebookMarkStore = create((set, get) => ({
-  Bookmark: [],
+  bookmark: [],
   currentbookMark: null,
   isLoading: false,
   error: null,
@@ -11,8 +11,9 @@ export const usebookMarkStore = create((set, get) => ({
   addbooMark: async (problemId) => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.post(`/add/book-mark/:${problemId}`);
+      const res = await axiosInstance.post(`/add/book-mark/${problemId}`);
       console.log("Add Book Mark resposne is : ", res.data);
+      set({bookmark: res.data})
       toast.success("Problem added to Bookmark");
     } catch (error) {
       console.log("Error in adding problem into the playlist");
@@ -27,7 +28,7 @@ export const usebookMarkStore = create((set, get) => ({
       set({ isLoading: true });
       const res = await axiosInstance.get("/add/");
       console.log("Res data getting bookmark is :", res.data);
-      set({ Bookmark: res.data.Bookmark });
+      set({ currentbookMark: res.data.Bookmark });
     } catch (error) {
       console.log("Error in fetching bookmark list :", error);
       toast.error(

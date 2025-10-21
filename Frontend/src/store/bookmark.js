@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 
 export const usebookMarkStore = create((set, get) => ({
   bookmark: [],
-  currentbookMark: null,
+  currentbookMark: [],
   isLoading: false,
   error: null,
 
@@ -13,11 +13,15 @@ export const usebookMarkStore = create((set, get) => ({
       set({ isLoading: true });
       const res = await axiosInstance.post(`/add/book-mark/${problemId}`);
       console.log("Add Book Mark resposne is : ", res.data);
-      set({bookmark: res.data})
+      // Update state with the newly added bookmark
+      set((state) => ({
+        bookmark: [...state.bookmark, res.data.Bookmark],
+      }));
+
       toast.success("Problem added to Bookmark");
     } catch (error) {
-      console.log("Error in adding problem into the playlist");
-      toast.error(error.response?.data?.error || "Failed to add bookmark");
+      console.log("Error in adding problem into the playlist", error);
+      toast.error(error?.response?.data?.message || "Failed to add bookmark");
     } finally {
       set({ isLoading: false });
     }
@@ -26,9 +30,10 @@ export const usebookMarkStore = create((set, get) => ({
   getallBookmarks: async () => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.get("/add/");
+      const res = await axiosInstance.get("/add/all");
       console.log("Res data getting bookmark is :", res.data);
-      set({ currentbookMark: res.data.Bookmark });
+      set({ currentbookMark: res.data.Bookmark || [] });
+      return res.data.Bookmark
     } catch (error) {
       console.log("Error in fetching bookmark list :", error);
       toast.error(
@@ -44,6 +49,9 @@ export const usebookMarkStore = create((set, get) => ({
       set({ isLoading: true });
       const res = await axiosInstance.delete(`/add/remove-BookMark/${id}`);
       console.log("Remove bookmark is :", res.data);
+      set((state) => ({
+        bookmark: state.bookmark.filter((b) => b.id !== bookmarkId),
+      }));
       toast.success(res?.data?.message || "Bookmark removed");
     } catch (error) {
       console.log("Error in removing Bookmark :", error);

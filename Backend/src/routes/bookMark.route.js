@@ -5,7 +5,7 @@ import { bookMark, getBookmarlList, removeBookmark } from "../controller/bookMar
 const BookMark = express.Router()
 
 BookMark.post("/book-mark/:problemId",authMiddleware,bookMark)
-BookMark.get("/",authMiddleware,getBookmarlList)
+BookMark.get("/all",authMiddleware,getBookmarlList)
 BookMark.delete("/remove-BookMark/:id", authMiddleware, removeBookmark)
 
 export default BookMark

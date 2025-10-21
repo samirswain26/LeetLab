@@ -32,7 +32,14 @@ const ProblemPage = () => {
   const { id } = useParams();
 
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
-  const { addbooMark, bookmark, removeBookmark } = usebookMarkStore();
+  const {
+    addbooMark,
+    // bookmark,
+    removeBookmark,
+    getallBookmarks,
+    currentbookMark,
+    isLoading: isBookmarkLoading,
+  } = usebookMarkStore();
 
   const {
     submission: submissions,
@@ -48,8 +55,54 @@ const ProblemPage = () => {
   const [selectedLanguage, setSelectedlanguage] = useState("JAVASCRIPT"); //By putting the value in uppercase it directly shows the code in that language
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
-
+  const [bookmarkId, setBookmarkId] = useState(null);
   const { executeCode, submission, isExecuting } = useExecutionStore();
+
+  useEffect(() => {
+    const loadBookmarks = async () => {
+      const all = await getallBookmarks();
+      const found = all?.find((bm) => bm.problemId === id);
+      const found1 = await currentbookMark?.find((a) => a.problemId === id);
+
+      if (found1) {
+        setIsBookmarked(true);
+        setBookmarkId(found?.problemId);
+      } else {
+        setBookmarkId(false);
+        setBookmarkId(false);
+      }
+
+    //   if (found) {
+    //     setBookmarkId(true);
+    //     setBookmarkId(found?.id);
+    //   } else {
+    //     setBookmarkId(false);
+    //     setBookmarkId(false);
+    //   }
+    };
+    loadBookmarks();
+  }, [id]);
+
+  console.log("Get bookmarks in main page : ", currentbookMark);
+  console.log("Get bookmarks in main pag111e : ", getallBookmarks);
+
+  const handleBookmarkToggle = async () => {
+    try {
+      if (isBookmarked && bookmarkId) {
+        await removeBookmark(bookmarkId);
+        setIsBookmarked(false);
+        setBookmarkId(false);
+      } else {
+        const newBM = await addbooMark(id);
+        if (newBM) {
+          setIsBookmarked(true);
+          setBookmarkId(newBM?.id);
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling bookmark:", error);
+    }
+  };
 
   console.log("id is :", id);
 
@@ -217,20 +270,6 @@ const ProblemPage = () => {
     }
   };
 
-  const handleBookmarkToggle = async () => {
-    try {
-      if (isBookmarked) {
-        await removeBookmark(id);
-        setIsBookmarked(false);
-      } else {
-        await addbooMark(id);
-        setIsBookmarked(true);
-      }
-    } catch (error) {
-      console.error("Error toggling bookmark:", error);
-    }
-  };
-
   console.log("Submission is : ", submissions);
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
@@ -269,10 +308,8 @@ const ProblemPage = () => {
                 className={`btn btn-ghost btn-circle ${
                   isBookmarked ? "text-primary" : ""
                 }`}
-                // onClick={() => setIsBookmarked(!isBookmarked)}
-
                 onClick={handleBookmarkToggle}
-                disabled={isLoading}
+                disabled={isBookmarkLoading}
               >
                 <Bookmark className="w-5 h-5" />
               </button>

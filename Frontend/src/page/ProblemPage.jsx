@@ -34,7 +34,6 @@ const ProblemPage = () => {
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
   const {
     addbooMark,
-    // bookmark,
     removeBookmark,
     getallBookmarks,
     currentbookMark,
@@ -61,24 +60,15 @@ const ProblemPage = () => {
   useEffect(() => {
     const loadBookmarks = async () => {
       const all = await getallBookmarks();
-      const found = all?.find((bm) => bm.problemId === id);
       const found1 = await currentbookMark?.find((a) => a.problemId === id);
 
       if (found1) {
         setIsBookmarked(true);
-        setBookmarkId(found?.problemId);
+        setBookmarkId(found1?.problemId);
       } else {
         setBookmarkId(false);
         setBookmarkId(false);
       }
-
-    //   if (found) {
-    //     setBookmarkId(true);
-    //     setBookmarkId(found?.id);
-    //   } else {
-    //     setBookmarkId(false);
-    //     setBookmarkId(false);
-    //   }
     };
     loadBookmarks();
   }, [id]);

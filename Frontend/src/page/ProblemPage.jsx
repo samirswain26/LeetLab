@@ -56,43 +56,54 @@ const ProblemPage = () => {
   const [testcases, setTestCases] = useState([]);
   const [bookmarkId, setBookmarkId] = useState(null);
   const { executeCode, submission, isExecuting } = useExecutionStore();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const loadBookmarks = async () => {
       const all = await getallBookmarks();
-      const found1 = await currentbookMark?.find((a) => a.problemId === id);
+      const found1 = await all?.find((a) => a.problemId === id);
 
       if (found1) {
         setIsBookmarked(true);
-        setBookmarkId(found1?.problemId);
+        setBookmarkId(found1?.id);
       } else {
-        setBookmarkId(false);
+        setIsBookmarked(false);
         setBookmarkId(false);
       }
     };
     loadBookmarks();
   }, [id]);
 
-  console.log("Get bookmarks in main page : ", currentbookMark);
-  console.log("Get bookmarks in main pag111e : ", getallBookmarks);
 
   const handleBookmarkToggle = async () => {
     try {
       if (isBookmarked && bookmarkId) {
-        await removeBookmark(bookmarkId);
+        const idToRemove = bookmarkId; //this stores the actual id need to be remove bookmark...
         setIsBookmarked(false);
-        setBookmarkId(false);
+
+        await removeBookmark(idToRemove);
+
+        setBookmarkId(null); //aded
+        await getallBookmarks();
       } else {
+        setIsBookmarked(true);
+
         const newBM = await addbooMark(id);
         if (newBM) {
-          setIsBookmarked(true);
           setBookmarkId(newBM?.id);
         }
       }
     } catch (error) {
       console.error("Error toggling bookmark:", error);
+      setIsBookmarked((prev) => !prev);
+      toast.error("Failed to update bookmark");
     }
   };
+
+  // Load problem and submissions on mount
+  useEffect(() => {
+    getSubmissionForPeoblem(id);
+  }, [id]);
 
   console.log("id is :", id);
 
@@ -261,6 +272,31 @@ const ProblemPage = () => {
   };
 
   console.log("Submission is : ", submissions);
+
+  const handlesubmission = async () => {
+    try {
+      console.log("ressss :", submissions);
+
+      if (submissions.length === 0) {
+        toast.error("Need to solve the problem");
+        return;
+      }
+
+      const res = await submissions.some((a) => a.status === "Accepted");
+      console.log("res in :", res);
+
+      if (res === true) {
+        toast.success("Already submitted!");
+        setIsSubmitted(true);
+      } else if (res === false) {
+        toast.error("Solution need to be correct!");
+      } else {
+        toast.success("Solution submitted!");
+        setIsSubmitted(true);
+      }
+    } catch (error) {}
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-300 to-base-200 max-w-7xl w-full">
       {isProblemLoading ? (
@@ -407,12 +443,16 @@ const ProblemPage = () => {
                           isExecuting ? "loading" : ""
                         }`}
                         onClick={handleRunCode}
-                        disabled={isExecuting}
+                        disabled={isExecuting || isSubmitted}
                       >
                         {!isExecuting && <Play className="w-4 h-4" />}
                         Run Code
                       </button>
-                      <button className="btn btn-success gap-2">
+                      <button
+                        className="btn btn-success gap-2"
+                        onClick={handlesubmission}
+                        disabled={isSubmitted}
+                      >
                         Submit Solution
                       </button>
                     </div>

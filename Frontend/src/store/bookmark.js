@@ -14,11 +14,16 @@ export const usebookMarkStore = create((set, get) => ({
       const res = await axiosInstance.post(`/add/book-mark/${problemId}`);
       console.log("Add Book Mark resposne is : ", res.data);
       // Update state with the newly added bookmark
-      set((state) => ({
-        bookmark: [...state.bookmark, res.data.Bookmark],
-      }));
 
-      toast.success("Problem added to Bookmark");
+      const newbookmark = res.data?.Bookmark
+      if(newbookmark){
+        set((state) => ({
+          bookmark: [...state.bookmark, res.data.Bookmark],
+          currentbookMark: [...state.currentbookMark, res.data.Bookmark],
+        }));
+        toast.success("Problem added to Bookmark");
+      }
+      return newbookmark
     } catch (error) {
       console.log("Error in adding problem into the playlist", error);
       toast.error(error?.response?.data?.message || "Failed to add bookmark");
@@ -33,12 +38,9 @@ export const usebookMarkStore = create((set, get) => ({
       const res = await axiosInstance.get("/add/all");
       console.log("Res data getting bookmark is :", res.data);
       set({ currentbookMark: res.data.Bookmark || [] });
-      return res.data.Bookmark
+      return res.data.Bookmark;
     } catch (error) {
       console.log("Error in fetching bookmark list :", error);
-      toast.error(
-        error?.response?.data?.error || "Failed to fetch Bookmarl list"
-      );
     } finally {
       set({ isLoading: false });
     }
@@ -50,12 +52,18 @@ export const usebookMarkStore = create((set, get) => ({
       const res = await axiosInstance.delete(`/add/remove-BookMark/${id}`);
       console.log("Remove bookmark is :", res.data);
       set((state) => ({
-        bookmark: state.bookmark.filter((b) => b.id !== bookmarkId),
+        bookmark: state.bookmark.filter((b) => b.id !== id),
+        currentbookMark: state.currentbookMark.filter(
+          (b) => b.id !== id
+        ),
       }));
       toast.success(res?.data?.message || "Bookmark removed");
+      return res.data || {success: true}
     } catch (error) {
       console.log("Error in removing Bookmark :", error);
-      toast.error(res?.data?.message || "Failed to remove Bookmark");
+      toast.error(error?.res?.data?.message || "Failed to remove Bookmark");
+    }finally{
+      set({isLoading: false})
     }
   },
 }));

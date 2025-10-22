@@ -8,7 +8,10 @@ import Score from "../components/Score";
 import BookmarkList from "../components/BookmarkList";
 
 const ProfilePage = () => {
-  const { authUser } = useAuthStore();
+  const { authUser, Logout } = useAuthStore();
+  const handleLogout = () => {
+    Logout()
+  }
 
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center py-10 px-4 md:px-8">
@@ -121,11 +124,17 @@ const ProfilePage = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap justify-end gap-4 mt-10">
-              <button className="btn btn-outline btn-primary rounded-lg">
+              {/* <button className="btn btn-outline btn-primary rounded-lg">
                 Edit Profile
               </button>
               <button className="btn btn-primary rounded-lg">
                 Change Password
+              </button> */}
+              <button 
+                className="btn btn-primary rounded-lg "
+                onClick={handleLogout}
+              >
+                Logout
               </button>
             </div>
           </div>

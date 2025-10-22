@@ -5,6 +5,7 @@ import ProblemSolvedByUser from "../components/ProblemSolvedByUser";
 import PlayListCreatedByUser from "../components/PlayListCreatedByUser";
 import ProblemSolvedByPremiumUser from "../components/SubscriptioonProblemSolvedUsers";
 import Score from "../components/Score";
+import BookmarkList from "../components/BookmarkList";
 
 const ProfilePage = () => {
   const { authUser } = useAuthStore();
@@ -136,6 +137,7 @@ const ProfilePage = () => {
         <ProblemSolvedByUser />
         <ProblemSolvedByPremiumUser />
         <PlayListCreatedByUser />
+        <BookmarkList />
       </div>
     </div>
   );

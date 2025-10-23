@@ -2,10 +2,7 @@ import bcrypt from "bcryptjs";
 import { db } from "../Libs/db.js";
 import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
-
-// const  {  generators } = await import("openid-client");
-// import {getGoogleClient} from "../Libs/Googleclient.js"
-
+import passport from "passport";
 
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
@@ -172,9 +169,42 @@ export const check = async (req, res) => {
   }
 };
 
+export const googleAuth = async (req, res) => {
+  passport.authenticate("google", { scope: ["profile", "email"] });
+};
 
-export const googleAuth = async(req,res) => {
+export const googleCallBack = async (req, res) => {
+  passport.authenticate("google", {
+    failureRedirect: `${process.env.Frontend_URL}`,
+    session: false,
+  });
 
-}
+  const token = jwt.sign(
+    {
+      id: req.user._id,
+      email: req.user.email,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+  res.redirect(`${process.env.Frontend_URL}/auth/success?token=${token}`);
+};
 
-export const googleCallBack = async(req, res) => {}
+export const me = async () => {
+  try {
+    res.json({ user: req.user });
+  } catch (error) {
+    console.log("Error checking user", error);
+    res.status(500).json({
+      error: "Error in checking user",
+    });
+  }
+};
+
+export const Logout = async (req, res) => {
+  try {
+  res.json({ message: "Logged out successfully" });
+  } catch (error) {
+  res.json({ message: "Logged out failed" });
+  }
+};

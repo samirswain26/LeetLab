@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-// import passport from "passport";
+import passport from "passport";
 
 // Routes
 import authRoutes from "./routes/auth.routes.js";
@@ -30,7 +30,9 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
 
+import "./Libs/Googleclient.js"
 // app.use(passport.initialize())
 // app.use(passport.session())
 

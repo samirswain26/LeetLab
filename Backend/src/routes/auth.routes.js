@@ -4,10 +4,11 @@ import {
   googleAuth,
   googleCallBack,
   login,
+  Logout,
   logout,
   register,
 } from "../controller/auth.controller.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
+import { authenticateToken, authMiddleware } from "../middleware/auth.middleware.js";
 
 const authRoutes = express.Router();
 
@@ -19,5 +20,7 @@ authRoutes.get("/check", authMiddleware, check);
 // OID connect 
 authRoutes.get("/google", googleAuth)
 authRoutes.get("/google/callback", googleCallBack)
+authRoutes.get("/me", authenticateToken, check)
+authRoutes.get("/Logout", authenticateToken, Logout)
 
 export default authRoutes;

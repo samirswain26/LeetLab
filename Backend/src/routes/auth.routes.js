@@ -1,6 +1,8 @@
 import express from "express";
 import {
   check,
+  googleAuth,
+  googleCallBack,
   login,
   logout,
   register,
@@ -13,5 +15,9 @@ authRoutes.post("/register", register);
 authRoutes.post("/login", login);
 authRoutes.post("/logout", authMiddleware, logout);
 authRoutes.get("/check", authMiddleware, check);
+
+// OID connect 
+authRoutes.get("/google", googleAuth)
+authRoutes.get("/google/callback", googleCallBack)
 
 export default authRoutes;

@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+// import passport from "passport";
+
 // Routes
 import authRoutes from "./routes/auth.routes.js";
 import problemRoutes from "./routes/problem.routes.js";
@@ -27,6 +29,10 @@ app.use(
     credentials: true,
   })
 );
+
+
+// app.use(passport.initialize())
+// app.use(passport.session())
 
 app.get("/", (req, res) => {
   res.send("Hello Guys Welcome to leetlab🔥");

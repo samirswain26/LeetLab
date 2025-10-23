@@ -3,6 +3,10 @@ import { db } from "../Libs/db.js";
 import { UserRole } from "../generated/prisma/index.js";
 import jwt from "jsonwebtoken";
 
+// const  {  generators } = await import("openid-client");
+// import {getGoogleClient} from "../Libs/Googleclient.js"
+
+
 export const register = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -167,3 +171,10 @@ export const check = async (req, res) => {
     });
   }
 };
+
+
+export const googleAuth = async(req,res) => {
+
+}
+
+export const googleCallBack = async(req, res) => {}

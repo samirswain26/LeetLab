@@ -65,16 +65,4 @@ export const useAuthStore = create((set) => ({
       toast.error("Error in logout");
     }
   },
-
-  googleLogin: async () => {
-    try {
-      const res = await axiosInstance.get("/auth/google");
-      console.log("Log out data is : ", res.data);
-      set({ authUser: null });
-      toast.success("User logged out successfully");
-    } catch (error) {
-      console.log("Error in logout : ", error);
-      toast.error("Error in logout");
-    }
-  },
 }));
